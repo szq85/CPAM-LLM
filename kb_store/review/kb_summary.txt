@@ -1,0 +1,319 @@
+========================================================================
+  CPAM-LLM Knowledge Base — FCA Concept Lattice Summary
+  References:
+    Ganter & Wille (1999): Formal Concept Analysis
+    Guigues & Duquenne (1986): Canonical implication base
+    Poelmans et al. (2013): FCA in knowledge processing
+    NextClosure algorithm: Ganter (1984)
+  Generated: 2026-05-29 07:46:31
+========================================================================
+
+1. FORMAL CONTEXT  K = (G, M, I)
+   Objects  |G| =   140  (KB problem instances)
+   Attributes |M| =    54  (CP domain keywords)
+   Incidence entries: 1206 / 7560
+   Density: 16.0%
+
+   Attribute set M (complete list):
+     m001: aircraft_skin_processing
+     m002: arc_existence
+     m003: base_composition_balance
+     m004: battery_pack_design
+     m005: battery_pack_voltage_range
+     m006: budget_limit
+     m007: charging_station_location
+     m008: demand_allocation
+     m009: demand_area_expansion
+     m010: demand_coverage
+     m011: depot_departure_return
+     m012: dinucleotide_repetition_limit
+     m013: dna_sequence_design
+     m014: faulty_module_isolation
+     m015: feasibility
+     m016: flow_conservation
+     m017: forbidden_motif
+     m018: gc_content
+     m019: inter_job_precedence
+     m020: job_start_time_window
+     m021: job_temporal_bounds
+     m022: load_demand_satisfaction
+     m023: location_exclusion
+     m024: max_module_current
+     m025: minimize_energy_loss
+     m026: minimize_makespan
+     m027: minimize_total_cost
+     m028: minimize_total_distance
+     m029: module_usage_balancing
+     m030: non_preemption
+     m031: operation_end_time_window
+     m032: operation_level_precedence
+     m033: operation_precedence
+     m034: operational_capacity_derating
+     m035: parallel_activation_consistency
+     m036: resource_capacity_no_overlap
+     m037: resource_flexibility
+     m038: reverse_complementarity
+     m039: sequence_dependent_setup
+     m040: sequence_diversity
+     m041: site_capacity
+     m042: site_diversity
+     m043: site_opening
+     m044: spatial_block_activation_limit
+     m045: subtour_elimination
+     m046: switch_count_limit
+     m047: terminal_gc_stability
+     m048: travel_cost_limit
+     m049: vehicle_capacity
+     m050: vehicle_capacity_relaxed
+     m051: visit_once
+     m052: vrp
+     m053: vrp_time_window
+     m054: watson_crick_pairing
+
+2. CONCEPT LATTICE  L(K)
+   |L(K)| = 138 formal concepts
+   Each concept C=(A,B) satisfies  A' = B  AND  B' = A
+   Enumerated via NextClosure (Ganter 1984, lectic order)
+
+   Formal concepts ordered by |A| descending:
+    Idx    |A|    |B|  Label                                Sample intent (first 4 attrs)
+   ---------------------------------------------------------------------
+      0    140      0  ⊤ (TOP)                              
+      1     61      6  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, ... (+2)
+      2     31      6  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+2)
+      3     31      7  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_level_precedence, ... (+3)
+      4     30      7  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+3)
+      5     30      7  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+3)
+      6     29      7  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, ... (+3)
+      7     29      7  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_end_time_window, ... (+3)
+      8     29      7  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+3)
+      9     16      6  DNA Sequence|dna_sequence_design,feasibility,gc_content  dna_sequence_design, feasibility, gc_content, reverse_complementarity, ... (+2)
+     10     16      7  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+3)
+     11     16      6  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+2)
+     12     16      7  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, ... (+3)
+     13     16      8  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+4)
+     14     15      7  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+3)
+     15     15      7  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+3)
+     16     15      7  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+3)
+     17     15      7  Charging Sta|charging_station_location,demand_allocation,demand_area_expansion  charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, ... (+3)
+     18     15      8  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_level_precedence, ... (+4)
+     19     15      8  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_end_time_window, ... (+4)
+     20     15      8  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+4)
+     21     15      8  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+4)
+     22     15      8  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+4)
+     23     14      8  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+4)
+     24     14      8  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+4)
+     25     14      8  Aircraft Ski|aircraft_skin_processing,job_start_time_window,job_temporal_bounds  aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, ... (+4)
+     26     14      8  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+4)
+     27     14      8  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+4)
+     28     14      8  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_temporal_bounds  aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, ... (+4)
+     29     13      8  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_end_time_window, ... (+4)
+     30     13      8  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+4)
+     31     13      8  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+4)
+     32      8      7  DNA Sequence|dna_sequence_design,feasibility,gc_content  dna_sequence_design, feasibility, gc_content, reverse_complementarity, ... (+3)
+     33      8      7  DNA Sequence|dna_sequence_design,feasibility,forbidden_motif  dna_sequence_design, feasibility, forbidden_motif, gc_content, ... (+3)
+     34      8      7  DNA Sequence|dinucleotide_repetition_limit,dna_sequence_design,feasibility  dinucleotide_repetition_limit, dna_sequence_design, feasibility, gc_content, ... (+3)
+     35      8      8  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+4)
+     36      8      8  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+4)
+     37      8      8  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+4)
+     38      8      8  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+4)
+     39      8      7  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+3)
+     40      8      7  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+3)
+     41      8      7  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+3)
+     42      8      7  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+3)
+     43      8      7  DNA Sequence|base_composition_balance,dna_sequence_design,feasibility  base_composition_balance, dna_sequence_design, feasibility, gc_content, ... (+3)
+     44      8      8  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, ... (+4)
+     45      8      8  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, ... (+4)
+     46      8      8  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, ... (+4)
+     47      8      8  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, location_exclusion, ... (+4)
+     48      8      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+5)
+     49      8      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+5)
+     50      8      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_temporal_bounds  aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, ... (+5)
+     51      8      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+5)
+     52      7      8  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+4)
+     53      7      8  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+4)
+     54      7      8  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+4)
+     55      7      8  Charging Sta|charging_station_location,demand_allocation,demand_area_expansion  charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, ... (+4)
+     56      7      8  Charging Sta|charging_station_location,demand_allocation,demand_area_expansion  charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, ... (+4)
+     57      7      8  Charging Sta|charging_station_location,demand_allocation,demand_area_expansion  charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, ... (+4)
+     58      7      9  Aircraft Ski|aircraft_skin_processing,minimize_makespan,non_preemption  aircraft_skin_processing, minimize_makespan, non_preemption, operation_end_time_window, ... (+5)
+     59      7      9  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+5)
+     60      7      9  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+5)
+     61      7      9  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+5)
+     62      7      9  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+5)
+     63      7      9  Aircraft Ski|aircraft_skin_processing,job_start_time_window,job_temporal_bounds  aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, ... (+5)
+     64      7      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+5)
+     65      7      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+5)
+     66      7      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, job_temporal_bounds, ... (+5)
+     67      6      9  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+5)
+     68      6      9  Aircraft Ski|aircraft_skin_processing,job_start_time_window,job_temporal_bounds  aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, ... (+5)
+     69      6      9  Aircraft Ski|aircraft_skin_processing,job_start_time_window,job_temporal_bounds  aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, ... (+5)
+     70      6      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+5)
+     71      6      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_temporal_bounds  aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, ... (+5)
+     72      6      9  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_temporal_bounds  aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, ... (+5)
+     73      5      9  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+5)
+     74      4      8  DNA Sequence|dna_sequence_design,feasibility,forbidden_motif  dna_sequence_design, feasibility, forbidden_motif, gc_content, ... (+4)
+     75      4      8  DNA Sequence|dinucleotide_repetition_limit,dna_sequence_design,feasibility  dinucleotide_repetition_limit, dna_sequence_design, feasibility, gc_content, ... (+4)
+     76      4      8  DNA Sequence|dinucleotide_repetition_limit,dna_sequence_design,feasibility  dinucleotide_repetition_limit, dna_sequence_design, feasibility, forbidden_motif, ... (+4)
+     77      4      9  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+5)
+     78      4      9  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+5)
+     79      4      9  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+5)
+     80      4      9  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+5)
+     81      4      9  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+5)
+     82      4      9  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+5)
+     83      4      8  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+4)
+     84      4      8  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+4)
+     85      4      8  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+4)
+     86      4      8  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+4)
+     87      4      8  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+4)
+     88      4      8  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+4)
+     89      4      8  DNA Sequence|base_composition_balance,dna_sequence_design,feasibility  base_composition_balance, dna_sequence_design, feasibility, gc_content, ... (+4)
+     90      4      8  DNA Sequence|base_composition_balance,dna_sequence_design,feasibility  base_composition_balance, dna_sequence_design, feasibility, forbidden_motif, ... (+4)
+     91      4      8  DNA Sequence|base_composition_balance,dinucleotide_repetition_limit,dna_sequence_design  base_composition_balance, dinucleotide_repetition_limit, dna_sequence_design, feasibility, ... (+4)
+     92      4      9  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, ... (+5)
+     93      4      9  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, ... (+5)
+     94      4      9  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, location_exclusion, ... (+5)
+     95      4      9  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, location_exclusion, ... (+5)
+     96      4      9  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, location_exclusion, ... (+5)
+     97      4     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,minimize_makespan  aircraft_skin_processing, inter_job_precedence, minimize_makespan, non_preemption, ... (+6)
+     98      4     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_temporal_bounds  aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, ... (+6)
+     99      4     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_temporal_bounds  aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, ... (+6)
+    100      4     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+6)
+    101      4     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+6)
+    102      4     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, job_temporal_bounds, ... (+6)
+    103      3      9  Charging Sta|charging_station_location,demand_allocation,demand_coverage  charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, ... (+5)
+    104      3      9  Charging Sta|charging_station_location,demand_allocation,demand_area_expansion  charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, ... (+5)
+    105      3      9  Charging Sta|charging_station_location,demand_allocation,demand_area_expansion  charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, ... (+5)
+    106      3      9  Charging Sta|charging_station_location,demand_allocation,demand_area_expansion  charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, ... (+5)
+    107      3     10  Aircraft Ski|aircraft_skin_processing,job_temporal_bounds,minimize_makespan  aircraft_skin_processing, job_temporal_bounds, minimize_makespan, non_preemption, ... (+6)
+    108      3     10  Aircraft Ski|aircraft_skin_processing,job_start_time_window,minimize_makespan  aircraft_skin_processing, job_start_time_window, minimize_makespan, non_preemption, ... (+6)
+    109      3     10  Aircraft Ski|aircraft_skin_processing,job_start_time_window,job_temporal_bounds  aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, ... (+6)
+    110      3     10  Aircraft Ski|aircraft_skin_processing,job_start_time_window,job_temporal_bounds  aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, ... (+6)
+    111      3     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+6)
+    112      3     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, job_temporal_bounds, ... (+6)
+    113      3     10  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, job_temporal_bounds, ... (+6)
+    114      2      9  DNA Sequence|dinucleotide_repetition_limit,dna_sequence_design,feasibility  dinucleotide_repetition_limit, dna_sequence_design, feasibility, forbidden_motif, ... (+5)
+    115      2     10  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_coverage, ... (+6)
+    116      2     10  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+6)
+    117      2     10  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+6)
+    118      2     10  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+6)
+    119      2      9  Battery Pack|battery_pack_design,battery_pack_voltage_range,load_demand_satisfaction  battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, ... (+5)
+    120      2      9  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+5)
+    121      2      9  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+5)
+    122      2      9  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+5)
+    123      2      9  DNA Sequence|base_composition_balance,dna_sequence_design,feasibility  base_composition_balance, dna_sequence_design, feasibility, forbidden_motif, ... (+5)
+    124      2      9  DNA Sequence|base_composition_balance,dinucleotide_repetition_limit,dna_sequence_design  base_composition_balance, dinucleotide_repetition_limit, dna_sequence_design, feasibility, ... (+5)
+    125      2      9  DNA Sequence|base_composition_balance,dinucleotide_repetition_limit,dna_sequence_design  base_composition_balance, dinucleotide_repetition_limit, dna_sequence_design, feasibility, ... (+5)
+    126      2     10  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, location_exclusion, ... (+6)
+    127      2     10  VRP|arc_existence,depot_departure_return,flow_conservation  arc_existence, depot_departure_return, flow_conservation, location_exclusion, ... (+6)
+    128      2     10  Aircraft Ski|aircraft_skin_processing,job_start_time_window,job_temporal_bounds  aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, ... (+6)
+    129      2     11  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_temporal_bounds  aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, ... (+7)
+    130      2     11  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, minimize_makespan, ... (+7)
+    131      2     11  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, job_temporal_bounds, ... (+7)
+    132      2     11  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, job_temporal_bounds, ... (+7)
+    133      1     11  Charging Sta|budget_limit,charging_station_location,demand_allocation  budget_limit, charging_station_location, demand_allocation, demand_area_expansion, ... (+7)
+    134      1     10  Battery Pack|battery_pack_design,battery_pack_voltage_range,faulty_module_isolation  battery_pack_design, battery_pack_voltage_range, faulty_module_isolation, load_demand_satisfaction, ... (+6)
+    135      1     10  DNA Sequence|base_composition_balance,dinucleotide_repetition_limit,dna_sequence_design  base_composition_balance, dinucleotide_repetition_limit, dna_sequence_design, feasibility, ... (+6)
+    136      1     12  Aircraft Ski|aircraft_skin_processing,inter_job_precedence,job_start_time_window  aircraft_skin_processing, inter_job_precedence, job_start_time_window, job_temporal_bounds, ... (+8)
+    137      0     54  ⊥ (BOTTOM)                           aircraft_skin_processing, arc_existence, base_composition_balance, battery_pack_design, ... (+50)
+
+3. CANONICAL IMPLICATION BASE  (Duquenne-Guigues base)
+   68 implications — cardinality-minimal complete base
+   An implication U→V holds iff every object with attrs U has attrs V
+
+   {watson_crick_pairing} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity}
+   {vrp_time_window} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}
+   {vrp} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once}
+   {visit_once} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, vrp}
+   {vehicle_capacity_relaxed} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}
+   {vehicle_capacity} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}
+   {travel_cost_limit} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}
+   {terminal_gc_stability} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}
+   {switch_count_limit} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}
+   {subtour_elimination} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, visit_once, vrp}
+   {spatial_block_activation_limit} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}
+   {site_opening} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity}
+   {site_diversity} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}
+   {site_capacity} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_opening}
+   {sequence_diversity} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, watson_crick_pairing}
+   {sequence_dependent_setup} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {reverse_complementarity} → {dna_sequence_design, feasibility, gc_content, sequence_diversity, watson_crick_pairing}
+   {resource_flexibility} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap}
+   {resource_capacity_no_overlap} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_flexibility}
+   {parallel_activation_consistency} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss}
+   {operational_capacity_derating} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}
+   {operation_precedence} → {aircraft_skin_processing, minimize_makespan, non_preemption, resource_capacity_no_overlap, resource_flexibility}
+   {operation_level_precedence} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {operation_end_time_window} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {non_preemption} → {aircraft_skin_processing, minimize_makespan, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {module_usage_balancing} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}
+   {minimize_total_distance} → {arc_existence, depot_departure_return, flow_conservation, subtour_elimination, visit_once, vrp}
+   {minimize_total_cost} → {charging_station_location, demand_allocation, demand_coverage, site_capacity, site_opening}
+   {minimize_makespan} → {aircraft_skin_processing, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {minimize_energy_loss} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, parallel_activation_consistency}
+   {max_module_current} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, minimize_energy_loss, parallel_activation_consistency}
+   {location_exclusion} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}
+   {load_demand_satisfaction} → {battery_pack_design, battery_pack_voltage_range, max_module_current, minimize_energy_loss, parallel_activation_consistency}
+   {job_temporal_bounds} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {job_start_time_window} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {inter_job_precedence} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {gc_content} → {dna_sequence_design, feasibility, reverse_complementarity, sequence_diversity, watson_crick_pairing}
+   {forbidden_motif} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}
+   {flow_conservation} → {arc_existence, depot_departure_return, minimize_total_distance, subtour_elimination, visit_once, vrp}
+   {feasibility} → {dna_sequence_design, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}
+   {faulty_module_isolation} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}
+   {dna_sequence_design} → {feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}
+   {dinucleotide_repetition_limit} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}
+   {depot_departure_return} → {arc_existence, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}
+   {demand_coverage} → {charging_station_location, demand_allocation, minimize_total_cost, site_capacity, site_opening}
+   {demand_area_expansion} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}
+   {demand_allocation} → {charging_station_location, demand_coverage, minimize_total_cost, site_capacity, site_opening}
+   {charging_station_location} → {demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}
+   {charging_station_location, demand_allocation, demand_coverage, dna_sequence_design, feasibility, gc_content, minimize_total_cost, reverse_complementarity, sequence_diversity, site_capacity, site_opening, watson_crick_pairing} → {aircraft_skin_processing, arc_existence, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, demand_area_expansion, depot_departure_return, dinucleotide_repetition_limit, faulty_module_isolation, flow_conservation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, minimize_total_distance, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup, site_diversity, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window}
+   {charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, minimize_total_cost, operational_capacity_derating, site_capacity, site_diversity, site_opening, travel_cost_limit} → {budget_limit}
+   {budget_limit} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}
+   {battery_pack_voltage_range} → {battery_pack_design, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}
+   {battery_pack_design} → {battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}
+   {battery_pack_design, battery_pack_voltage_range, dna_sequence_design, feasibility, gc_content, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency, reverse_complementarity, sequence_diversity, watson_crick_pairing} → {aircraft_skin_processing, arc_existence, base_composition_balance, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, depot_departure_return, dinucleotide_repetition_limit, faulty_module_isolation, flow_conservation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_makespan, minimize_total_cost, minimize_total_distance, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window}
+   {battery_pack_design, battery_pack_voltage_range, charging_station_location, demand_allocation, demand_coverage, load_demand_satisfaction, max_module_current, minimize_energy_loss, minimize_total_cost, parallel_activation_consistency, site_capacity, site_opening} → {aircraft_skin_processing, arc_existence, base_composition_balance, budget_limit, demand_area_expansion, depot_departure_return, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, flow_conservation, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_makespan, minimize_total_distance, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_diversity, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window, watson_crick_pairing}
+   {base_composition_balance} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}
+   {arc_existence} → {depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}
+   {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp} → {aircraft_skin_processing, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, minimize_total_cost, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vrp_time_window, watson_crick_pairing}
+   {arc_existence, depot_departure_return, dna_sequence_design, feasibility, flow_conservation, gc_content, minimize_total_distance, reverse_complementarity, sequence_diversity, subtour_elimination, visit_once, vrp, watson_crick_pairing} → {aircraft_skin_processing, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, faulty_module_isolation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, minimize_total_cost, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window}
+   {arc_existence, charging_station_location, demand_allocation, demand_coverage, depot_departure_return, flow_conservation, minimize_total_cost, minimize_total_distance, site_capacity, site_opening, subtour_elimination, visit_once, vrp} → {aircraft_skin_processing, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, demand_area_expansion, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_diversity, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window, watson_crick_pairing}
+   {arc_existence, battery_pack_design, battery_pack_voltage_range, depot_departure_return, flow_conservation, load_demand_satisfaction, max_module_current, minimize_energy_loss, minimize_total_distance, parallel_activation_consistency, subtour_elimination, visit_once, vrp} → {aircraft_skin_processing, base_composition_balance, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_makespan, minimize_total_cost, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window, watson_crick_pairing}
+   {aircraft_skin_processing} → {minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}
+   {aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup} → {inter_job_precedence}
+   {aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, non_preemption, operation_end_time_window, operation_precedence, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup} → {operation_level_precedence}
+   {aircraft_skin_processing, dna_sequence_design, feasibility, gc_content, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_diversity, watson_crick_pairing} → {arc_existence, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, depot_departure_return, dinucleotide_repetition_limit, faulty_module_isolation, flow_conservation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_total_cost, minimize_total_distance, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, parallel_activation_consistency, sequence_dependent_setup, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window}
+   {aircraft_skin_processing, charging_station_location, demand_allocation, demand_coverage, minimize_makespan, minimize_total_cost, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility, site_capacity, site_opening} → {arc_existence, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, demand_area_expansion, depot_departure_return, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, flow_conservation, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_total_distance, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, parallel_activation_consistency, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_diversity, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window, watson_crick_pairing}
+   {aircraft_skin_processing, battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, minimize_makespan, non_preemption, operation_precedence, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility} → {arc_existence, base_composition_balance, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, depot_departure_return, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, flow_conservation, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_total_cost, minimize_total_distance, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window, watson_crick_pairing}
+   {aircraft_skin_processing, arc_existence, depot_departure_return, flow_conservation, minimize_makespan, minimize_total_distance, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility, subtour_elimination, visit_once, vrp} → {base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_total_cost, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, parallel_activation_consistency, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window, watson_crick_pairing}
+
+4. HASSE DIAGRAM  (cover relations of L(K))
+   346 direct cover edges
+   (A1,B1) covers (A2,B2) iff A1 ⊂ A2, no intermediate concept
+
+   concept[1] (DNA Sequence|dna_seq) < concept[0] (⊤ (TOP))
+   concept[2] (DNA Sequence|dna_seq) < concept[1] (DNA Sequence|dna_seq)
+   concept[3] (DNA Sequence|dna_seq) < concept[1] (DNA Sequence|dna_seq)
+   concept[4] (DNA Sequence|dna_seq) < concept[2] (DNA Sequence|dna_seq)
+   concept[4] (DNA Sequence|dna_seq) < concept[3] (DNA Sequence|dna_seq)
+   concept[5] (DNA Sequence|dinucle) < concept[1] (DNA Sequence|dna_seq)
+   concept[6] (DNA Sequence|dinucle) < concept[2] (DNA Sequence|dna_seq)
+   concept[6] (DNA Sequence|dinucle) < concept[5] (DNA Sequence|dinucle)
+   concept[7] (DNA Sequence|dinucle) < concept[3] (DNA Sequence|dna_seq)
+   concept[7] (DNA Sequence|dinucle) < concept[5] (DNA Sequence|dinucle)
+   concept[8] (DNA Sequence|dinucle) < concept[4] (DNA Sequence|dna_seq)
+   concept[8] (DNA Sequence|dinucle) < concept[6] (DNA Sequence|dinucle)
+   concept[8] (DNA Sequence|dinucle) < concept[7] (DNA Sequence|dinucle)
+   concept[9] (Charging Sta|chargin) < concept[0] (⊤ (TOP))
+   concept[10] (Charging Sta|chargin) < concept[9] (Charging Sta|chargin)
+   concept[11] (Charging Sta|chargin) < concept[9] (Charging Sta|chargin)
+   concept[12] (Charging Sta|chargin) < concept[10] (Charging Sta|chargin)
+   concept[12] (Charging Sta|chargin) < concept[11] (Charging Sta|chargin)
+   concept[13] (Charging Sta|chargin) < concept[9] (Charging Sta|chargin)
+   concept[14] (Charging Sta|chargin) < concept[10] (Charging Sta|chargin)
+   ... (326 more edges)
+
+========================================================================

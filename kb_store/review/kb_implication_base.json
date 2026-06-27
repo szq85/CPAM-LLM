@@ -1,0 +1,1468 @@
+{
+  "description": "Canonical implication base (Duquenne-Guigues base) of K. An implication U→V holds in K if every object having all attrs in U also has all attrs in V. This base is cardinality-minimal (Guigues & Duquenne 1986). Computed via NextClosure / pseudo-closed set enumeration (Ganter 1984).",
+  "implication_count": 68,
+  "implications": [
+    {
+      "premise": [
+        "watson_crick_pairing"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "reverse_complementarity",
+        "sequence_diversity"
+      ],
+      "reads_as": "{watson_crick_pairing} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity}"
+    },
+    {
+      "premise": [
+        "vrp_time_window"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{vrp_time_window} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "vrp"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once"
+      ],
+      "reads_as": "{vrp} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once}"
+    },
+    {
+      "premise": [
+        "visit_once"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "vrp"
+      ],
+      "reads_as": "{visit_once} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, vrp}"
+    },
+    {
+      "premise": [
+        "vehicle_capacity_relaxed"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{vehicle_capacity_relaxed} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "vehicle_capacity"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{vehicle_capacity} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "travel_cost_limit"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{travel_cost_limit} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "terminal_gc_stability"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{terminal_gc_stability} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "switch_count_limit"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{switch_count_limit} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "subtour_elimination"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{subtour_elimination} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "spatial_block_activation_limit"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{spatial_block_activation_limit} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "site_opening"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity"
+      ],
+      "reads_as": "{site_opening} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity}"
+    },
+    {
+      "premise": [
+        "site_diversity"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{site_diversity} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "site_capacity"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_opening"
+      ],
+      "reads_as": "{site_capacity} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_opening}"
+    },
+    {
+      "premise": [
+        "sequence_diversity"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "reverse_complementarity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{sequence_diversity} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "sequence_dependent_setup"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{sequence_dependent_setup} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "reverse_complementarity"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{reverse_complementarity} → {dna_sequence_design, feasibility, gc_content, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "resource_flexibility"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap"
+      ],
+      "reads_as": "{resource_flexibility} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap}"
+    },
+    {
+      "premise": [
+        "resource_capacity_no_overlap"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_flexibility"
+      ],
+      "reads_as": "{resource_capacity_no_overlap} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "parallel_activation_consistency"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss"
+      ],
+      "reads_as": "{parallel_activation_consistency} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss}"
+    },
+    {
+      "premise": [
+        "operational_capacity_derating"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{operational_capacity_derating} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "operation_precedence"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{operation_precedence} → {aircraft_skin_processing, minimize_makespan, non_preemption, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "operation_level_precedence"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{operation_level_precedence} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "operation_end_time_window"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{operation_end_time_window} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "non_preemption"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{non_preemption} → {aircraft_skin_processing, minimize_makespan, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "module_usage_balancing"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{module_usage_balancing} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "minimize_total_distance"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{minimize_total_distance} → {arc_existence, depot_departure_return, flow_conservation, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "minimize_total_cost"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{minimize_total_cost} → {charging_station_location, demand_allocation, demand_coverage, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "minimize_makespan"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{minimize_makespan} → {aircraft_skin_processing, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "minimize_energy_loss"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{minimize_energy_loss} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "max_module_current"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{max_module_current} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "location_exclusion"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{location_exclusion} → {arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "load_demand_satisfaction"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{load_demand_satisfaction} → {battery_pack_design, battery_pack_voltage_range, max_module_current, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "job_temporal_bounds"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{job_temporal_bounds} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "job_start_time_window"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{job_start_time_window} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "inter_job_precedence"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{inter_job_precedence} → {aircraft_skin_processing, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "gc_content"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{gc_content} → {dna_sequence_design, feasibility, reverse_complementarity, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "forbidden_motif"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{forbidden_motif} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "flow_conservation"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "depot_departure_return",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{flow_conservation} → {arc_existence, depot_departure_return, minimize_total_distance, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "feasibility"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "gc_content",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{feasibility} → {dna_sequence_design, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "faulty_module_isolation"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{faulty_module_isolation} → {battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "dna_sequence_design"
+      ],
+      "conclusion": [
+        "feasibility",
+        "gc_content",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{dna_sequence_design} → {feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "dinucleotide_repetition_limit"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{dinucleotide_repetition_limit} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "depot_departure_return"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{depot_departure_return} → {arc_existence, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "demand_coverage"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{demand_coverage} → {charging_station_location, demand_allocation, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "demand_area_expansion"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{demand_area_expansion} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "demand_allocation"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{demand_allocation} → {charging_station_location, demand_coverage, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "charging_station_location"
+      ],
+      "conclusion": [
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{charging_station_location} → {demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "minimize_total_cost",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "site_capacity",
+        "site_opening",
+        "watson_crick_pairing"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "arc_existence",
+        "base_composition_balance",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "budget_limit",
+        "demand_area_expansion",
+        "depot_departure_return",
+        "dinucleotide_repetition_limit",
+        "faulty_module_isolation",
+        "flow_conservation",
+        "forbidden_motif",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "load_demand_satisfaction",
+        "location_exclusion",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_makespan",
+        "minimize_total_distance",
+        "module_usage_balancing",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "operational_capacity_derating",
+        "parallel_activation_consistency",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "sequence_dependent_setup",
+        "site_diversity",
+        "spatial_block_activation_limit",
+        "subtour_elimination",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "visit_once",
+        "vrp",
+        "vrp_time_window"
+      ],
+      "reads_as": "{charging_station_location, demand_allocation, demand_coverage, dna_sequence_design, feasibility, gc_content, minimize_total_cost, reverse_complementarity, sequence_diversity, site_capacity, site_opening, watson_crick_pairing} → {aircraft_skin_processing, arc_existence, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, demand_area_expansion, depot_departure_return, dinucleotide_repetition_limit, faulty_module_isolation, flow_conservation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, minimize_total_distance, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup, site_diversity, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window}"
+    },
+    {
+      "premise": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "minimize_total_cost",
+        "operational_capacity_derating",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "travel_cost_limit"
+      ],
+      "conclusion": [
+        "budget_limit"
+      ],
+      "reads_as": "{charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, minimize_total_cost, operational_capacity_derating, site_capacity, site_diversity, site_opening, travel_cost_limit} → {budget_limit}"
+    },
+    {
+      "premise": [
+        "budget_limit"
+      ],
+      "conclusion": [
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_total_cost",
+        "site_capacity",
+        "site_opening"
+      ],
+      "reads_as": "{budget_limit} → {charging_station_location, demand_allocation, demand_coverage, minimize_total_cost, site_capacity, site_opening}"
+    },
+    {
+      "premise": [
+        "battery_pack_voltage_range"
+      ],
+      "conclusion": [
+        "battery_pack_design",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{battery_pack_voltage_range} → {battery_pack_design, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "battery_pack_design"
+      ],
+      "conclusion": [
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency"
+      ],
+      "reads_as": "{battery_pack_design} → {battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency}"
+    },
+    {
+      "premise": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "parallel_activation_consistency",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "arc_existence",
+        "base_composition_balance",
+        "budget_limit",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "depot_departure_return",
+        "dinucleotide_repetition_limit",
+        "faulty_module_isolation",
+        "flow_conservation",
+        "forbidden_motif",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "location_exclusion",
+        "minimize_makespan",
+        "minimize_total_cost",
+        "minimize_total_distance",
+        "module_usage_balancing",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "operational_capacity_derating",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "sequence_dependent_setup",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "spatial_block_activation_limit",
+        "subtour_elimination",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "visit_once",
+        "vrp",
+        "vrp_time_window"
+      ],
+      "reads_as": "{battery_pack_design, battery_pack_voltage_range, dna_sequence_design, feasibility, gc_content, load_demand_satisfaction, max_module_current, minimize_energy_loss, parallel_activation_consistency, reverse_complementarity, sequence_diversity, watson_crick_pairing} → {aircraft_skin_processing, arc_existence, base_composition_balance, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, depot_departure_return, dinucleotide_repetition_limit, faulty_module_isolation, flow_conservation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_makespan, minimize_total_cost, minimize_total_distance, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window}"
+    },
+    {
+      "premise": [
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_total_cost",
+        "parallel_activation_consistency",
+        "site_capacity",
+        "site_opening"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "arc_existence",
+        "base_composition_balance",
+        "budget_limit",
+        "demand_area_expansion",
+        "depot_departure_return",
+        "dinucleotide_repetition_limit",
+        "dna_sequence_design",
+        "faulty_module_isolation",
+        "feasibility",
+        "flow_conservation",
+        "forbidden_motif",
+        "gc_content",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "location_exclusion",
+        "minimize_makespan",
+        "minimize_total_distance",
+        "module_usage_balancing",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "operational_capacity_derating",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "reverse_complementarity",
+        "sequence_dependent_setup",
+        "sequence_diversity",
+        "site_diversity",
+        "spatial_block_activation_limit",
+        "subtour_elimination",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "visit_once",
+        "vrp",
+        "vrp_time_window",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{battery_pack_design, battery_pack_voltage_range, charging_station_location, demand_allocation, demand_coverage, load_demand_satisfaction, max_module_current, minimize_energy_loss, minimize_total_cost, parallel_activation_consistency, site_capacity, site_opening} → {aircraft_skin_processing, arc_existence, base_composition_balance, budget_limit, demand_area_expansion, depot_departure_return, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, flow_conservation, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_makespan, minimize_total_distance, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_diversity, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "base_composition_balance"
+      ],
+      "conclusion": [
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{base_composition_balance} → {dna_sequence_design, feasibility, gc_content, reverse_complementarity, sequence_diversity, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "arc_existence"
+      ],
+      "conclusion": [
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "reads_as": "{arc_existence} → {depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, visit_once, vrp}"
+    },
+    {
+      "premise": [
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_distance",
+        "subtour_elimination",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "visit_once",
+        "vrp"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "base_composition_balance",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "budget_limit",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "dinucleotide_repetition_limit",
+        "dna_sequence_design",
+        "faulty_module_isolation",
+        "feasibility",
+        "forbidden_motif",
+        "gc_content",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "load_demand_satisfaction",
+        "location_exclusion",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_makespan",
+        "minimize_total_cost",
+        "module_usage_balancing",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "operational_capacity_derating",
+        "parallel_activation_consistency",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "reverse_complementarity",
+        "sequence_dependent_setup",
+        "sequence_diversity",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "spatial_block_activation_limit",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vrp_time_window",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{arc_existence, depot_departure_return, flow_conservation, minimize_total_distance, subtour_elimination, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp} → {aircraft_skin_processing, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, minimize_total_cost, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vrp_time_window, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "arc_existence",
+        "depot_departure_return",
+        "dna_sequence_design",
+        "feasibility",
+        "flow_conservation",
+        "gc_content",
+        "minimize_total_distance",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "subtour_elimination",
+        "visit_once",
+        "vrp",
+        "watson_crick_pairing"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "base_composition_balance",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "budget_limit",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "dinucleotide_repetition_limit",
+        "faulty_module_isolation",
+        "forbidden_motif",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "load_demand_satisfaction",
+        "location_exclusion",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_makespan",
+        "minimize_total_cost",
+        "module_usage_balancing",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "operational_capacity_derating",
+        "parallel_activation_consistency",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "sequence_dependent_setup",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "spatial_block_activation_limit",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "vrp_time_window"
+      ],
+      "reads_as": "{arc_existence, depot_departure_return, dna_sequence_design, feasibility, flow_conservation, gc_content, minimize_total_distance, reverse_complementarity, sequence_diversity, subtour_elimination, visit_once, vrp, watson_crick_pairing} → {aircraft_skin_processing, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, faulty_module_isolation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, minimize_total_cost, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window}"
+    },
+    {
+      "premise": [
+        "arc_existence",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_total_cost",
+        "minimize_total_distance",
+        "site_capacity",
+        "site_opening",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "base_composition_balance",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "budget_limit",
+        "demand_area_expansion",
+        "dinucleotide_repetition_limit",
+        "dna_sequence_design",
+        "faulty_module_isolation",
+        "feasibility",
+        "forbidden_motif",
+        "gc_content",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "load_demand_satisfaction",
+        "location_exclusion",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_makespan",
+        "module_usage_balancing",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "operational_capacity_derating",
+        "parallel_activation_consistency",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "reverse_complementarity",
+        "sequence_dependent_setup",
+        "sequence_diversity",
+        "site_diversity",
+        "spatial_block_activation_limit",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "vrp_time_window",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{arc_existence, charging_station_location, demand_allocation, demand_coverage, depot_departure_return, flow_conservation, minimize_total_cost, minimize_total_distance, site_capacity, site_opening, subtour_elimination, visit_once, vrp} → {aircraft_skin_processing, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, demand_area_expansion, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_makespan, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_diversity, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "arc_existence",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "depot_departure_return",
+        "flow_conservation",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_total_distance",
+        "parallel_activation_consistency",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "conclusion": [
+        "aircraft_skin_processing",
+        "base_composition_balance",
+        "budget_limit",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "dinucleotide_repetition_limit",
+        "dna_sequence_design",
+        "faulty_module_isolation",
+        "feasibility",
+        "forbidden_motif",
+        "gc_content",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "location_exclusion",
+        "minimize_makespan",
+        "minimize_total_cost",
+        "module_usage_balancing",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "operational_capacity_derating",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "reverse_complementarity",
+        "sequence_dependent_setup",
+        "sequence_diversity",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "spatial_block_activation_limit",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "vrp_time_window",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{arc_existence, battery_pack_design, battery_pack_voltage_range, depot_departure_return, flow_conservation, load_demand_satisfaction, max_module_current, minimize_energy_loss, minimize_total_distance, parallel_activation_consistency, subtour_elimination, visit_once, vrp} → {aircraft_skin_processing, base_composition_balance, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_makespan, minimize_total_cost, module_usage_balancing, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, operational_capacity_derating, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "aircraft_skin_processing"
+      ],
+      "conclusion": [
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "reads_as": "{aircraft_skin_processing} → {minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility}"
+    },
+    {
+      "premise": [
+        "aircraft_skin_processing",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "sequence_dependent_setup"
+      ],
+      "conclusion": [
+        "inter_job_precedence"
+      ],
+      "reads_as": "{aircraft_skin_processing, job_start_time_window, job_temporal_bounds, minimize_makespan, non_preemption, operation_end_time_window, operation_level_precedence, operation_precedence, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup} → {inter_job_precedence}"
+    },
+    {
+      "premise": [
+        "aircraft_skin_processing",
+        "inter_job_precedence",
+        "job_temporal_bounds",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_end_time_window",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "sequence_dependent_setup"
+      ],
+      "conclusion": [
+        "operation_level_precedence"
+      ],
+      "reads_as": "{aircraft_skin_processing, inter_job_precedence, job_temporal_bounds, minimize_makespan, non_preemption, operation_end_time_window, operation_precedence, resource_capacity_no_overlap, resource_flexibility, sequence_dependent_setup} → {operation_level_precedence}"
+    },
+    {
+      "premise": [
+        "aircraft_skin_processing",
+        "dna_sequence_design",
+        "feasibility",
+        "gc_content",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "reverse_complementarity",
+        "sequence_diversity",
+        "watson_crick_pairing"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "base_composition_balance",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "budget_limit",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "depot_departure_return",
+        "dinucleotide_repetition_limit",
+        "faulty_module_isolation",
+        "flow_conservation",
+        "forbidden_motif",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "load_demand_satisfaction",
+        "location_exclusion",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_total_cost",
+        "minimize_total_distance",
+        "module_usage_balancing",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operational_capacity_derating",
+        "parallel_activation_consistency",
+        "sequence_dependent_setup",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "spatial_block_activation_limit",
+        "subtour_elimination",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "visit_once",
+        "vrp",
+        "vrp_time_window"
+      ],
+      "reads_as": "{aircraft_skin_processing, dna_sequence_design, feasibility, gc_content, minimize_makespan, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility, reverse_complementarity, sequence_diversity, watson_crick_pairing} → {arc_existence, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, depot_departure_return, dinucleotide_repetition_limit, faulty_module_isolation, flow_conservation, forbidden_motif, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_total_cost, minimize_total_distance, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, parallel_activation_consistency, sequence_dependent_setup, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window}"
+    },
+    {
+      "premise": [
+        "aircraft_skin_processing",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_coverage",
+        "minimize_makespan",
+        "minimize_total_cost",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "site_capacity",
+        "site_opening"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "base_composition_balance",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "budget_limit",
+        "demand_area_expansion",
+        "depot_departure_return",
+        "dinucleotide_repetition_limit",
+        "dna_sequence_design",
+        "faulty_module_isolation",
+        "feasibility",
+        "flow_conservation",
+        "forbidden_motif",
+        "gc_content",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "load_demand_satisfaction",
+        "location_exclusion",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_total_distance",
+        "module_usage_balancing",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operational_capacity_derating",
+        "parallel_activation_consistency",
+        "reverse_complementarity",
+        "sequence_dependent_setup",
+        "sequence_diversity",
+        "site_diversity",
+        "spatial_block_activation_limit",
+        "subtour_elimination",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "visit_once",
+        "vrp",
+        "vrp_time_window",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{aircraft_skin_processing, charging_station_location, demand_allocation, demand_coverage, minimize_makespan, minimize_total_cost, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility, site_capacity, site_opening} → {arc_existence, base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, demand_area_expansion, depot_departure_return, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, flow_conservation, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_total_distance, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, parallel_activation_consistency, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_diversity, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "aircraft_skin_processing",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "load_demand_satisfaction",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_makespan",
+        "non_preemption",
+        "operation_precedence",
+        "parallel_activation_consistency",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "conclusion": [
+        "arc_existence",
+        "base_composition_balance",
+        "budget_limit",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "depot_departure_return",
+        "dinucleotide_repetition_limit",
+        "dna_sequence_design",
+        "faulty_module_isolation",
+        "feasibility",
+        "flow_conservation",
+        "forbidden_motif",
+        "gc_content",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "location_exclusion",
+        "minimize_total_cost",
+        "minimize_total_distance",
+        "module_usage_balancing",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operational_capacity_derating",
+        "reverse_complementarity",
+        "sequence_dependent_setup",
+        "sequence_diversity",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "spatial_block_activation_limit",
+        "subtour_elimination",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "visit_once",
+        "vrp",
+        "vrp_time_window",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{aircraft_skin_processing, battery_pack_design, battery_pack_voltage_range, load_demand_satisfaction, max_module_current, minimize_energy_loss, minimize_makespan, non_preemption, operation_precedence, parallel_activation_consistency, resource_capacity_no_overlap, resource_flexibility} → {arc_existence, base_composition_balance, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, depot_departure_return, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, flow_conservation, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, location_exclusion, minimize_total_cost, minimize_total_distance, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, subtour_elimination, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, visit_once, vrp, vrp_time_window, watson_crick_pairing}"
+    },
+    {
+      "premise": [
+        "aircraft_skin_processing",
+        "arc_existence",
+        "depot_departure_return",
+        "flow_conservation",
+        "minimize_makespan",
+        "minimize_total_distance",
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "subtour_elimination",
+        "visit_once",
+        "vrp"
+      ],
+      "conclusion": [
+        "base_composition_balance",
+        "battery_pack_design",
+        "battery_pack_voltage_range",
+        "budget_limit",
+        "charging_station_location",
+        "demand_allocation",
+        "demand_area_expansion",
+        "demand_coverage",
+        "dinucleotide_repetition_limit",
+        "dna_sequence_design",
+        "faulty_module_isolation",
+        "feasibility",
+        "forbidden_motif",
+        "gc_content",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "load_demand_satisfaction",
+        "location_exclusion",
+        "max_module_current",
+        "minimize_energy_loss",
+        "minimize_total_cost",
+        "module_usage_balancing",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "operational_capacity_derating",
+        "parallel_activation_consistency",
+        "reverse_complementarity",
+        "sequence_dependent_setup",
+        "sequence_diversity",
+        "site_capacity",
+        "site_diversity",
+        "site_opening",
+        "spatial_block_activation_limit",
+        "switch_count_limit",
+        "terminal_gc_stability",
+        "travel_cost_limit",
+        "vehicle_capacity",
+        "vehicle_capacity_relaxed",
+        "vrp_time_window",
+        "watson_crick_pairing"
+      ],
+      "reads_as": "{aircraft_skin_processing, arc_existence, depot_departure_return, flow_conservation, minimize_makespan, minimize_total_distance, non_preemption, operation_precedence, resource_capacity_no_overlap, resource_flexibility, subtour_elimination, visit_once, vrp} → {base_composition_balance, battery_pack_design, battery_pack_voltage_range, budget_limit, charging_station_location, demand_allocation, demand_area_expansion, demand_coverage, dinucleotide_repetition_limit, dna_sequence_design, faulty_module_isolation, feasibility, forbidden_motif, gc_content, inter_job_precedence, job_start_time_window, job_temporal_bounds, load_demand_satisfaction, location_exclusion, max_module_current, minimize_energy_loss, minimize_total_cost, module_usage_balancing, operation_end_time_window, operation_level_precedence, operational_capacity_derating, parallel_activation_consistency, reverse_complementarity, sequence_dependent_setup, sequence_diversity, site_capacity, site_diversity, site_opening, spatial_block_activation_limit, switch_count_limit, terminal_gc_stability, travel_cost_limit, vehicle_capacity, vehicle_capacity_relaxed, vrp_time_window, watson_crick_pairing}"
+    }
+  ]
+}

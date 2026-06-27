@@ -1,0 +1,113 @@
+﻿Number,CP natural language,CP code,Constraint,Problem types,CP formal language,Validation score,Timestamp,Source
+task_20260625_122049,"This problem arises from aircraft manufacturing where multiple skin components need to be processed through a series of operations. In the flexible job shop scheduling environment, each job (representing an aircraft skin component) must be processed according to a predefined sequence of operations. Each operation can be performed on multiple candidate machines with different processing times, providing flexibility in machine selection. However, each machine can process only one operation at a time, ensuring no resource conflicts. The system automatically handles temporal constraints between consecutive operations: tight constraints require intervals of 15 time units or less, while loose constraints require intervals of 30 time units or more. The objective is to minimize the makespan, which represents the maximum completion time across all jobs, thus optimizing the overall production efficiency. Write a Python program using the docplex.cp module (IBM CP Optimizer) to solve this flexible job shop scheduling problem. The input data should be read from a file named ""fjsp_location_newdataset_1.fjs"" located in the data subdirectory. The file format is as follows: the first line contains the number of jobs and machines; subsequent lines contain job information with the number of operations, and for each operation, the number of candidate machines followed by machine-duration pairs, and temporal constraint types ('tight', 'loose', or 'none').","from docplex.cp.model import CpoModel
+import os
+
+filename = os.path.dirname(os.path.abspath(__file__)) + ""/data/fjsp_location_newdataset_1.fjs""
+with open(filename, ""r"") as file:
+    NB_JOBS, NB_MACHINES = [int(v) for v in file.readline().split()]
+    list_jobs = [[v if v in ['tight', 'loose', 'none'] else int(v) for v in file.readline().split()] for i in
+                 range(NB_JOBS)]
+
+JOBS = []
+CONSTRAINTS = []  
+
+for jline in list_jobs:
+    nbstps = jline.pop(0)
+    job = []
+    constraints = []
+    for stp in range(nbstps):
+        nbc = jline.pop(0)
+        choices = []
+        for c in range(nbc):
+            m = jline.pop(0)
+            d = jline.pop(0)
+            choices.append((m - 1, d))
+        constraint = jline.pop(0) 
+        job.append(choices)
+        constraints.append(constraint)
+    JOBS.append(job)
+    CONSTRAINTS.append(constraints)
+
+mdl = CpoModel()
+job_number = {}
+all_operations = []
+machine_operations = [[] for m in range(NB_MACHINES)]
+job_operations = []
+
+for jx, job in enumerate(JOBS):
+    op_vars = []
+    for ox, op in enumerate(job):
+        choice_vars = []
+        for cx, (m, d) in enumerate(op):
+            cv = mdl.interval_var(name=""J{}_O{}_C{}_M{}"".format(jx, ox, cx, m),
+                                  optional=True, size=d)
+            job_number[cv.get_name()] = jx
+            choice_vars.append(cv)
+            machine_operations[m].append(cv)
+        jv = mdl.interval_var(name=""J{}_O{}"".format(jx, ox))
+        mdl.add(mdl.alternative(jv, choice_vars))
+        op_vars.append(jv)
+        if ox > 0:
+            mdl.add(mdl.end_before_start(op_vars[ox - 1], op_vars[ox]))
+        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'tight':
+            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) <= 15)
+        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'loose':
+            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) >= 30)
+
+    all_operations.extend(op_vars)
+    job_operations.append(op_vars)
+
+
+for lops in machine_operations:
+    mdl.add(mdl.no_overlap(lops))
+mdl.add(mdl.minimize(mdl.max([mdl.end_of(op) for op in all_operations])))
+
+print(""Solving model...."")
+msol = mdl.solve(TimeLimit=30)
+if msol:
+    print(""Solution found."")
+    print(""Objective value (Makespan):"", msol.get_objective_value())
+    print(""=== Machine Schedules ==="")
+    for m in range(NB_MACHINES):
+        print(f""\nMachine M{m}:"")
+        machine_schedule = []
+        for v in machine_operations[m]:
+            itv = msol.get_var_solution(v)
+            if itv.is_present():
+                jn = job_number[v.get_name()]
+                machine_schedule.append((itv.start, itv.end, f""J{jn}""))
+        machine_schedule.sort(key=lambda x: x[0])
+        for s, e, jn in machine_schedule:
+            print(f""  {jn:<5} Start: {s:<5}  End: {e:<5}  Duration: {e-s}"")
+else:
+    print(""No solution found."")","1,4",Aircraft Skin Processing,"1. Decision Variables
+x[j][o] []: Master interval variable for operation o of job j.
+x[j][o][m] []: Optional interval for op o of job j on machine m with processing time d.
+
+2. Parameters and Input Data
+NB_JOBS: Number of jobs.
+NB_MACHINES: Number of machines.
+A[j][o]: Set of (machine,duration) choices for op o of job j.
+tight/loose: Temporal constraint type between consecutive ops.
+
+3. Constraints
+[C1] Alternative Machine Assignment: alternative(x[j][o], [x[j][o][m] : m in A[j][o]])  forall j,o
+  Note: Exactly one candidate machine selected per operation.
+[C2] Operation Precedence: endBeforeStart(x[j][o], x[j][o+1])  forall j, o < last
+  Note: Operations within a job execute in order.
+[C3] Machine No-Overlap: noOverlap([x[j][o][m] : all j,o using machine m])  forall m
+  Note: Each machine processes at most one operation at a time.
+[C4] Tight Temporal Constraint: startOf(x[j][o+1]) - endOf(x[j][o]) <= 15  if CONSTRAINTS[j][o]='tight'
+  Note: Inter-operation gap at most 15 time units for tight constraint.
+[C5] Loose Temporal Constraint: startOf(x[j][o+1]) - endOf(x[j][o]) >= 30  if CONSTRAINTS[j][o]='loose'
+  Note: Inter-operation gap at least 30 time units for loose constraint.
+
+4. Objective Function
+MINIMIZE minimize(max([endOf(x[j][o]) : all j,o]))
+Note: Minimize makespan — maximum completion time across all operations.
+
+5. Data Specification
+NB_JOBS: Number of jobs. (input file fjsp_location_newdataset_1.fjs)
+NB_MACHINES: Number of machines. (input file)
+JOBS: Nested list: job→operation→[(machine,duration)]. (input file)
+CONSTRAINTS: Per-operation temporal constraint type: tight/loose/none. (input file)",0.932,2026-06-25T12:20:49.047832,pipeline

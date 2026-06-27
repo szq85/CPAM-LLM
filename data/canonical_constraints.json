@@ -1,0 +1,232 @@
+{
+  "Aircraft Skin Processing": {
+    "Alternative Machine Assignment": [
+      "alternative(x[j][o], [x[j][o][m] : m in A[j][o]])  forall j,o"
+    ],
+    "Operation Precedence": [
+      "endBeforeStart(x[j][o], x[j][o+1])  forall j, o < last"
+    ],
+    "Machine No-Overlap": [
+      "noOverlap([x[j][o][m] : all j,o using machine m])  forall m"
+    ],
+    "Tight Temporal Constraint": [
+      "startOf(x[j][o+1]) - endOf(x[j][o]) <= 15  if CONSTRAINTS[j][o]='tight'"
+    ],
+    "Loose Temporal Constraint": [
+      "startOf(x[j][o+1]) - endOf(x[j][o]) >= 30  if CONSTRAINTS[j][o]='loose'"
+    ],
+    "Job 1 Start Window": [
+      "20 <= startOf(x[0][0]) <= 100"
+    ],
+    "Job 2 Time Window": [
+      "startOf(x[1][o]) >= 10 AND endOf(x[1][o]) <= 700"
+    ],
+    "Inter-Job Precedence J2→J3": [
+      "endBeforeStart(x[1][last], x[2][0])"
+    ],
+    "Cross-Job Op Precedence J3op2→J4op1": [
+      "endBeforeStart(x[2][1], x[3][0])"
+    ],
+    "Job 5 First Op End Window": [
+      "100 <= endOf(x[4][0]) <= 700"
+    ],
+    "Sequence-Dependent Setup": [
+      "noOverlap(sequence_var(m), setup_times)  forall m"
+    ],
+    "Machine Maintenance Window": [
+      "forbidden_interval(maintenance_machine, [50,80])"
+    ],
+    "Job 3 Deadline": [
+      "endOf(x[2][o]) <= 600  forall o"
+    ],
+    "Global Earliest Start": [
+      "startOf(x[j][0]) >= 5  forall j"
+    ],
+    "Makespan Upper Bound": [
+      "endOf(x[j][o]) <= 1500  forall j,o"
+    ]
+  },
+  "Battery Pack Design": {
+    "Parallel Consistency": [
+      "sum(s[k,i,j] for i in I) == p[k]  forall k,j"
+    ],
+    "Voltage Lower Bound": [
+      "scalProd(s[k], V[k]) >= V_lower[k] * p[k]  forall k"
+    ],
+    "Voltage Upper Bound": [
+      "scalProd(s[k], V[k]) <= V_upper[k] * p[k]  forall k"
+    ],
+    "Current Capacity": [
+      "I_load[k] <= p[k] * I_MAX  forall k"
+    ],
+    "Module Usage Balance": [
+      "max(usage[i,j]) - min(usage[i,j]) <= 2, where usage[i,j]=sum(s[k,i,j] for k)",
+      "max(usage[i,j]) - min(usage[i,j]) <= 4, where usage[i,j]=sum(s[k,i,j] for k)"
+    ],
+    "Switching Limit": [
+      "sum(|s[k,i,j]-s[k-1,i,j]| for i,j) <= 6  forall k",
+      "sum(|s[k,i,j]-s[k-1,i,j]| for i,j) <= 10  forall k",
+      "sum(|s[k,i,j]-s[k-1,i,j]| for i,j) <= 8  forall k"
+    ],
+    "2×2 Block Constraint": [
+      "sum(block_2x2) <= 2  forall k,i,j"
+    ],
+    "Degraded Module Limit": [
+      "sum(s[k,0,0] for k in K) <= 1"
+    ],
+    "Minimum Active Modules": [
+      "p[k] >= 2  forall k"
+    ],
+    "Full Coverage": [
+      "sum(s[k,i,j] for k in K) >= 1  forall i,j"
+    ],
+    "No Three Consecutive Active": [
+      "s[k,i,j] + s[k,i,j+1] + s[k,i,j+2] <= 2  forall k,i,j<=J-3"
+    ],
+    "Reserved Module": [
+      "sum(s[k,I-1,J-1] for k) <= 1"
+    ],
+    "Max Active Ratio": [
+      "sum(s[k,i,j] for i,j) <= 0.8*I*J  forall k"
+    ],
+    "Vertical Mirror Mismatch Limit": [
+      "sum(s[k,i,j] != s[k,I-1-i,j] for i<I//2) <= 2  forall k,j"
+    ]
+  },
+  "Charging Station Location": {
+    "Station Activation": [
+      "open_station[p] == (load[p] > 0)  forall p"
+    ],
+    "Pack Constraint": [
+      "pack(load, assignment, demand)"
+    ],
+    "Extended Demand Scale": [
+      "nbDemandAreas = 40",
+      "nbDemandAreas = 35"
+    ],
+    "Per-Area Cost Cap": [
+      "element(assignment[c], cost[c]) <= 35  forall c",
+      "element(assignment[c], cost[c]) <= 50  forall c"
+    ],
+    "Fixed Cost Budget Range": [
+      "15000 <= scalProd(fixedCost, open_station) <= 40000"
+    ],
+    "Max Utilization": [
+      "load[p] <= 0.9 * capacity[p]  forall p",
+      "load[p] <= 1.0 * capacity[p]  forall p"
+    ],
+    "Geographic Separation": [
+      "open_station[i] + open_station[j] <= 1  if profile_dist(i,j) < percentile_10"
+    ],
+    "Minimum Open Stations": [
+      "sum(open_station[p] for p) >= 3"
+    ],
+    "Maximum Open Stations": [
+      "sum(open_station[p] for p) <= 12",
+      "sum(open_station[p] for p) <= 8"
+    ],
+    "Forced Station": [
+      "open_station[0] == 1"
+    ],
+    "Max Demand Share": [
+      "load[p] <= 0.4 * total_demand  forall p"
+    ],
+    "Average Service Cost Cap": [
+      "sum(element(assignment[c], cost[c]) for c) <= 18 * C"
+    ]
+  },
+  "DNA Sequence Design": {
+    "Valid Word Constraint": [
+      "allowedAssignments([words[i][j] for j=0..7], word_list)  forall i=0..5"
+    ],
+    "GC Content": [
+      "count(words[i],2) + count(words[i],3) == 4  forall i=0..5"
+    ],
+    "Pairwise Hamming Distance": [
+      "sum(words[i][k] != words[j][k] for k=0..7) >= 4  forall 0<=i<j<6"
+    ],
+    "Reverse-Complement Hamming Distance": [
+      "sum(element(complement, words[i][k]) != words[j][7-k] for k=0..7) >= 4  forall i,j in 0..5"
+    ],
+    "Terminal GC Constraint": [
+      "words[i][0] in {2,3} OR words[i][7] in {2,3}  forall i=0..5"
+    ],
+    "Global Base Balance": [
+      "n*L//4 - 2 <= count(all_bases, b) <= n*L//4 + 2  forall b in {0,1,2,3}"
+    ],
+    "No Repeat Dinucleotide": [
+      "logical_or(words[i][j]!=words[i][j+2], words[i][j+1]!=words[i][j+3])  forall i=0..5,j=0..4"
+    ],
+    "Forbidden Pattern": [
+      "sum(words[i][j+k]!=forbidden[k] for k) >= 1  forall i,j"
+    ],
+    "Additional Pairwise Hamming Check": [
+      "sum(words[i][k]!=words[j][k] for k=0..7) >= 4  forall 0<=i<j<6"
+    ],
+    "No Homopolymer Run": [
+      "logical_or(words[i][j]!=words[i][j+1], words[i][j+1]!=words[i][j+2])  forall i=0..5,j=0..5"
+    ],
+    "Exact AT Count": [
+      "count(words[i],0)==2 AND count(words[i],1)==2  forall i=0..5"
+    ],
+    "Central Guanine Stability": [
+      "count([words[i][k] for k in {2,3,4,5}], 3) >= 1  forall i=0..5"
+    ],
+    "Reversal Uniqueness": [
+      "sum(words[i][k]!=words[j][7-k] for k=0..7) >= 1  forall i!=j in 0..5"
+    ],
+    "Lexicographic Ordering": [
+      "lexicographic(words[i], words[i+1])  forall i=0..4"
+    ],
+    "Triangular Topological Complementarity": [
+      "element(complement, words[i][k+L//2])==words[(i+1) mod 3][p]  forall i=1,2,3"
+    ]
+  },
+  "Vehicle Routing Problem": {
+    "Service Coverage": [
+      "sum(arc[v][j][i] for v,j) == 1  forall i in customers"
+    ],
+    "Flow Conservation": [
+      "sum(arc[v][j][i] for j) == sum(arc[v][i][j] for j)  forall v,i"
+    ],
+    "Depot Constraint": [
+      "sum(arc[v][depot][j] for j) <= 1  forall v"
+    ],
+    "Capacity Constraint": [
+      "sum(d[j]*arc[v][i][j] for i,j) <= Q  forall v"
+    ],
+    "Subtour Elimination (MTZ)": [
+      "ifThen(arc[v][i][j]==1, u[v][j] >= u[v][i]+1)  forall v,i!=j in customers"
+    ],
+    "Capacity Relaxed": [
+      "(capacity constraint omitted)"
+    ],
+    "Time Window Constraints": [
+      "ready[i] <= t[v][i] <= due[i]; ifThen(arc[v][i][j]==1, t[v][j] >= t[v][i]+dist[i,j])"
+    ],
+    "Reduced Capacity": [
+      "Q = 180"
+    ],
+    "Node Exclusion": [
+      "arc[v][i][5] == 0 AND arc[v][5][i] == 0  forall v,i"
+    ],
+    "Max Customers Per Vehicle": [
+      "sum(arc[v][i][j] for i in nodes, j in customers, i!=j) <= 12  forall v"
+    ],
+    "Forced Visit": [
+      "sum(arc[0][i][1] for i) == 1"
+    ],
+    "Customer Co-Visit": [
+      "sum(arc[v][*][2]) == sum(arc[v][*][3])  forall v"
+    ],
+    "Max Route Distance": [
+      "sum(arc[v][i][j]*dist[i,j] for i,j) <= 150  forall v"
+    ],
+    "Full Fleet Deployment": [
+      "sum(arc[v][0][j] for j in C) >= 1  forall v"
+    ],
+    "Vehicle Zone Restriction": [
+      "arc[2][i][j] == 0  forall j < 10 or j > 25 (j != depot)"
+    ]
+  }
+}

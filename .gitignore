@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Secrets — never commit API keys
+.env
+*.key
+
+# Runtime outputs
+output/*
+!output/.gitkeep
+kb_store/review/
+
+# Large artifacts (host on Zenodo/HF and link instead)
+models/base/
+models/stage1_lora/*.safetensors
+models/stage2_lora/*.safetensors
+models/stage1_lora/*.bin
+models/stage2_lora/*.bin
+data/train/*.zip
+
+# Local Docker / service logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

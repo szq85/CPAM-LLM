@@ -1,0 +1,23 @@
+# Chaotic-mapping augmentation seeds
+#
+# Promised in the response to Reviewer 1 (R1-7): "exact seeds for the chaotic
+# mapping used in data augmentation". The VALUES BELOW ARE PLACEHOLDERS —
+# replace them with the exact numbers reported in Supplementary Table 12 so that
+# the repository and the manuscript agree.
+#
+# These settings must reproduce the augmented corpus deterministically.
+
+logistic_map:
+  x0: 0.0            # TODO: initial state x_0 from Supplementary Table 12
+  r:  0.0            # TODO: control parameter r from Supplementary Table 12
+  iterations: 0      # TODO: iteration count from Supplementary Table 12
+
+per_level_max_perturbation_rate:
+  level_1: 0.0       # TODO
+  level_2: 0.0       # TODO
+  level_3: 0.0       # TODO
+  level_4: 0.0       # TODO
+
+# If augmentation is driven from code (augmentation/chaos_augment.py), point that
+# module at this file, or copy these values into it, so there is a single source
+# of truth that matches Supplementary Table 12.

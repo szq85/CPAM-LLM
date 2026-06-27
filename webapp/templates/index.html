@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ModouGPT</title>
+<style>
+  :root{
+    --bg:#eceefb; --bg2:#e7e9f9; --panel:#ffffff; --ink:#2a2c3b; --muted:#8a8da3;
+    --line:#e6e7f2; --accent:#6c5ce7; --accent2:#5b6ef5; --accent-soft:#eceaff;
+    --chip:#f4f5fc; --user-bubble:#eef0ff; --bot-bubble:#ffffff;
+    --ok:#19b67a; --warn:#e8a33d; --bad:#e2574c;
+    --radius:16px; --shadow:0 8px 30px rgba(70,72,120,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:"Segoe UI",-apple-system,system-ui,"PingFang SC",sans-serif;
+       background:linear-gradient(160deg,var(--bg),var(--bg2));color:var(--ink);font-size:14px}
+  button{font-family:inherit;cursor:pointer;border:none;outline:none}
+  .hidden{display:none !important}
+
+  /* top bar */
+  .topbar{height:56px;display:flex;align-items:center;gap:18px;padding:0 22px;
+          background:rgba(255,255,255,.6);backdrop-filter:blur(8px);
+          border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:8px}
+  .brand .logo{height:30px;width:auto;display:block}
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:18px}
+  .topbar .scene-label{color:var(--muted)}
+  .topbar .scene-label b{color:var(--ink);font-weight:600}
+  .topbar .model-pick{display:flex;align-items:center;gap:8px;color:var(--muted)}
+  select,.btn{border-radius:10px}
+  select{padding:6px 12px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  .btn{padding:8px 16px;border-radius:10px;font-weight:600}
+  .btn-primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;
+       box-shadow:0 6px 16px rgba(108,92,231,.32)}
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:#56586e}
+  .btn-ghost:hover{background:#f7f8fe}
+  .btn-soft{background:var(--accent-soft);color:var(--accent)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  /* segmented mode toggle */
+  .seg{display:inline-flex;background:#f0f1fb;border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+  .seg button{padding:6px 12px;border-radius:8px;background:transparent;color:#5a5d7a;font-weight:600;
+       font-size:12.5px;border:none}
+  .seg button.active{background:#fff;color:var(--accent);box-shadow:0 2px 6px rgba(70,72,120,.12)}
+  .seg.locked button:not(.active){opacity:.4}
+  .seg-label{color:var(--muted);font-size:12.5px}
+  .mode-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 4px 14px}
+  .mode-desc{color:var(--muted);font-size:12px;flex:1;min-width:180px}
+
+  /* welcome */
+  .welcome{height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;
+           justify-content:center;gap:18px}
+  .welcome .logo-lg{display:flex;align-items:center;justify-content:center}
+  .welcome .logo-lg .logo{height:72px;width:auto;display:block}
+  .welcome h1{margin:6px 0 16px;font-size:22px;font-weight:600;color:#3c3e57}
+  .scene-bar{width:min(760px,92vw);background:#fff;border:1px solid var(--line);
+       border-radius:18px;box-shadow:var(--shadow);padding:16px 16px 14px}
+  .scene-bar .hint{color:var(--muted);font-size:12.5px;margin:2px 4px 12px}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .chip{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;
+        background:var(--chip);border:1px solid var(--line);color:#4a4c63;font-weight:600;
+        transition:.15s;min-width:96px;justify-content:center;text-align:center;line-height:1.2}
+  .chip:hover{border-color:#c9ccf0;transform:translateY(-1px)}
+  .chip.active{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;
+        border-color:transparent;box-shadow:0 8px 18px rgba(108,92,231,.3)}
+  .chip .ic{font-size:15px}
+  .go{margin-left:auto;width:40px;height:40px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-size:18px;
+      display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(108,92,231,.3)}
+
+  /* workspace */
+  .workspace{height:calc(100vh - 56px);display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+         box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+  .panel-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+  .panel-head .title{font-weight:700;color:#3a3c52}
+  .panel-head .tabs{margin-left:auto;display:flex;gap:6px}
+  .tab{padding:5px 12px;border-radius:8px;color:var(--muted);font-size:12.5px;background:transparent}
+  .tab.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+
+  /* chat */
+  .chat{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+  .msg{max-width:86%;padding:12px 14px;border-radius:14px;line-height:1.55;white-space:pre-wrap;
+       font-size:13px;box-shadow:0 2px 8px rgba(70,72,120,.05)}
+  .msg.user{align-self:flex-end;background:var(--user-bubble);border:1px solid #e0e3ff;border-bottom-right-radius:4px}
+  .msg.bot{align-self:flex-start;background:var(--bot-bubble);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .msg .role{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;letter-spacing:.04em}
+  .msg .acts{margin-top:10px;display:flex;gap:8px}
+  .msg .copybtn{font-size:12px;padding:5px 10px;border-radius:8px;background:var(--accent-soft);
+       color:var(--accent);font-weight:600}
+  .msg .copybtn:hover{filter:brightness(.97)}
+  .chat-input{border-top:1px solid var(--line);padding:12px;display:flex;gap:10px;background:#fbfbff}
+  .chat-input textarea{flex:1;resize:none;height:46px;border:1px solid var(--line);border-radius:12px;
+       padding:12px 14px;font-family:inherit;font-size:13px;color:var(--ink);background:#fff}
+  .chat-input textarea:focus{border-color:var(--accent)}
+  .send{width:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),var(--accent));
+        color:#fff;font-size:18px}
+
+  /* model / stage area */
+  .model-body{flex:1;overflow:auto;padding:16px;font-size:13px;line-height:1.7}
+  .clist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .clist li{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfbff}
+  .clist li .cid{display:inline-block;min-width:30px;font-weight:700;color:var(--accent)}
+  .ctype{color:#6a6d86;font-size:11.5px;margin-left:4px}
+  .obj-row{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);
+           color:#4b3fc4;font-weight:600}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-bottom:12px}
+  .meta b{color:var(--ink)}
+  .tag{display:inline-block;padding:2px 8px;border-radius:20px;background:#f0f1fb;color:#5a5d7a;
+       font-size:11px;margin:2px 4px 2px 0}
+  .panel-foot{border-top:1px solid var(--line);padding:12px;display:flex;gap:10px;
+              justify-content:center;background:#fbfbff;flex-wrap:wrap}
+  .sec-h{margin:14px 0 8px;font-weight:700;color:#3a3c52;font-size:12.5px;letter-spacing:.02em}
+  .math{font-family:"Consolas","SF Mono",monospace;font-size:12px;color:#3a3c52}
+  .stage-note{color:#56586e;background:#f6f7fd;border:1px solid var(--line);border-radius:10px;
+              padding:10px 12px;margin-bottom:6px}
+  .edit-hint{margin-top:16px;border-top:1px dashed var(--line);padding-top:10px;font-size:11.5px}
+
+  /* manual step view */
+  .stepper{display:flex;align-items:center;gap:6px;padding:10px 16px;border-bottom:1px solid var(--line);
+       background:#fbfbff;font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .step{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid var(--line);
+       background:#fff}
+  .step b{display:inline-flex;width:18px;height:18px;border-radius:50%;background:#eceaff;color:var(--accent);
+       align-items:center;justify-content:center;font-size:11px;font-weight:700}
+  .step.active{border-color:transparent;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff}
+  .step.active b{background:rgba(255,255,255,.25);color:#fff}
+  .step.done{cursor:pointer;color:#5a5d7a;border-color:#d7d9ef}
+  .step.done b{background:#e4f8ef;color:var(--ok)}
+  .step-sep{color:#c7cae0}
+  .stage-zh{font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
+  .stage-badge{margin-left:8px;font-size:11px;color:var(--accent);background:var(--accent-soft);
+       padding:2px 8px;border-radius:20px;font-weight:600}
+  .manual-busy{font-size:12px;color:var(--muted);margin-left:12px;display:flex;align-items:center;gap:6px}
+  .editor{flex:1;width:100%;border:none;outline:none;resize:none;padding:16px;
+       font-family:"Consolas","SF Mono",monospace;font-size:12.5px;line-height:1.6;
+       color:#cdd3f0;background:#1f2236;white-space:pre;overflow:auto}
+  .code-block{margin:0;padding:14px 16px;font-family:"Consolas","SF Mono",monospace;font-size:12.5px;
+       line-height:1.6;color:#cdd3f0;background:#1f2236;border-radius:10px;white-space:pre;overflow-x:auto}
+
+  /* code view (auto) */
+  .code-wrap{flex:1;overflow:auto;padding:0}
+  pre.code{margin:0;padding:16px;font-family:"Consolas","SF Mono",monospace;font-size:12.5px;
+       line-height:1.6;color:#cdd3f0;background:#1f2236;height:100%;white-space:pre;overflow:auto}
+  .subtle{color:var(--muted);font-size:12px}
+
+  /* result + console */
+  .result-box{padding:14px 16px;border-top:1px solid var(--line);font-size:13px;max-height:34%;overflow:auto}
+  .result-box h4{margin:0 0 8px;font-size:13px;color:#3a3c52}
+  .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-weight:700;font-size:12px}
+  .pill.ok{background:#e4f8ef;color:var(--ok)} .pill.bad{background:#fdecea;color:var(--bad)}
+  .pill.warn{background:#fcf3e2;color:var(--warn)}
+  pre.mono{font-family:"Consolas",monospace;font-size:12px;background:#f6f7fd;border:1px solid var(--line);
+       border-radius:10px;padding:10px;white-space:pre-wrap;color:#3a3c52;margin:8px 0 0}
+
+  .console{position:fixed;right:14px;bottom:14px;width:min(440px,90vw);max-height:38vh;
+       background:#1f2236;color:#cdd3f0;border-radius:14px;box-shadow:0 16px 40px rgba(20,20,40,.4);
+       display:flex;flex-direction:column;overflow:hidden;z-index:40}
+  .console .ch{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#272a42;
+       font-size:12px;font-weight:600;letter-spacing:.05em}
+  .console .cb{padding:10px 12px;overflow:auto;font-family:Consolas,monospace;font-size:11.5px;
+       white-space:pre-wrap;line-height:1.5}
+  .console .cx{margin-left:auto;cursor:pointer;color:#aeb4d6}
+  .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#2a2c3b;color:#fff;
+       padding:10px 18px;border-radius:10px;box-shadow:var(--shadow);z-index:60;font-size:13px;
+       opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+  .spinner{width:15px;height:15px;border:2px solid rgba(108,92,231,.3);border-top-color:var(--accent);
+       border-radius:50%;display:inline-block;animation:spin .7s linear infinite;vertical-align:-2px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ── refined right-panel presentation ─────────────────────────── */
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .mpill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:#5a5d7a;background:#f5f6fc;
+       border:1px solid var(--line);border-radius:20px;padding:4px 11px}
+  .mpill b{color:var(--ink);font-weight:600}
+  .mpill.accent{background:var(--accent-soft);border-color:#e0ddff;color:var(--accent)}
+  .mpill.ok{background:#e9f8f0;border-color:#cdeede;color:#0f9b63}
+  .sec-h{display:flex;align-items:center;gap:8px;margin:18px 0 10px;font-size:11px;font-weight:700;
+       letter-spacing:.09em;text-transform:uppercase;color:#9598b0}
+  .sec-h::before{content:"";width:12px;height:2px;border-radius:2px;
+       background:linear-gradient(90deg,var(--accent2),var(--accent))}
+  .callout{position:relative;padding:12px 14px 12px 18px;border-radius:12px;color:#4a4d66;line-height:1.6;
+       background:linear-gradient(180deg,#fbfbff,#f5f6fd);border:1px solid var(--line)}
+  .callout::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;
+       background:linear-gradient(180deg,var(--accent2),var(--accent))}
+  .cgrid{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+  .card{padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#fff;
+       box-shadow:0 1px 2px rgba(70,72,120,.04);transition:.15s}
+  .card:hover{border-color:#d8daf3;box-shadow:0 6px 16px rgba(70,72,120,.08);transform:translateY(-1px)}
+  .tok{font-family:"Consolas","SF Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);
+       background:var(--accent-soft);border-radius:6px;padding:1px 7px}
+  .dim{color:var(--muted)}
+  .desc{color:#54566e;line-height:1.55;margin-top:4px}
+  .crow{display:flex;align-items:flex-start;gap:10px}
+  .cbadge{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:22px;
+       padding:0 7px;border-radius:7px;font-size:11px;font-weight:700;color:#fff;
+       background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 2px 6px rgba(108,92,231,.28)}
+  .cmain{flex:1;min-width:0}
+  .cpill{flex:none;align-self:flex-start;font-size:10.5px;font-weight:600;color:#7a7d99;white-space:nowrap;
+       border:1px solid var(--line);background:#f7f8fd;border-radius:20px;padding:2px 9px}
+  .obj-card{margin-top:16px;border-radius:14px;padding:14px 16px;
+       background:linear-gradient(135deg,#efeefe,#e9ecff);border:1px solid #e0e2fb}
+  .obj-card .lbl{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:.09em;
+       text-transform:uppercase;color:#6a5fd0;margin-bottom:8px}
+  .obj-card .dirpill{font-size:10px;color:#fff;letter-spacing:.04em;border-radius:20px;padding:2px 9px;
+       background:linear-gradient(135deg,var(--accent2),var(--accent))}
+  .obj-card .expr{font-family:"Consolas","SF Mono",monospace;font-size:13px;color:#3a357e;font-weight:600;
+       word-break:break-word;line-height:1.5}
+  .obj-card .note{color:#6b6e92;font-size:12px;margin-top:6px;line-height:1.5}
+  .formula{font-family:"Consolas","SF Mono",monospace;font-size:12px;color:#3a3c52;background:#f6f7fd;
+       border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:6px;overflow-x:auto;white-space:pre}
+  .kv{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .kv code{font-family:"Consolas",monospace;color:#5a5d7a;background:#f3f4fb;border-radius:5px;padding:1px 5px}
+  .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+  .chip-soft{font-size:11px;color:#5a5d7a;background:#f3f4fb;border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+  .code-head{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#272a42;color:#aeb4d6;
+       font-size:11px;font-weight:600;letter-spacing:.05em;border-radius:10px 10px 0 0}
+  .code-head .dot{width:9px;height:9px;border-radius:50%;background:#ff5f57;
+       box-shadow:15px 0 #febc2e,30px 0 #28c840}
+  .code-head .nm{margin-left:18px}
+  .code-head .lang{margin-left:auto;color:#7e84ad;text-transform:uppercase;letter-spacing:.1em}
+  .code-block.tagged{border-radius:0 0 10px 10px;margin-top:0}
+
+  /* ── Formal-Expression: disambiguation confidence + certainty classification ── */
+  .score-bar{height:8px;border-radius:6px;background:#eef0fa;border:1px solid #e6e7f4;overflow:hidden}
+  .score-bar>i{display:block;height:100%;border-radius:6px;
+       background:linear-gradient(90deg,var(--accent2),var(--accent))}
+  .conf-card{border:1px solid #e0ddff;border-radius:14px;padding:14px 16px;
+       background:linear-gradient(135deg,#f3f1ff,#eef0ff)}
+  .conf-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .conf-num{font-family:"Consolas","SF Mono",monospace;font-size:22px;font-weight:800;color:var(--accent);line-height:1}
+  .cls-wrap{display:flex;gap:10px;flex-wrap:wrap}
+  .cls-group{flex:1;min-width:190px;border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:#fff}
+  .cls-group.certain{background:linear-gradient(180deg,#f1fbf6,#fbfffd);border-color:#cdeede}
+  .cls-group.possible{background:linear-gradient(180deg,#fbf9f1,#fffdf8);border-color:#f0e6c8}
+  .cls-head{font-size:11.5px;font-weight:700;color:#3a3c52;margin-bottom:8px}
+  .cls-head .dim{font-weight:500;font-size:10.5px}
+  .chip-soft.certain{background:#e6f7ef;border-color:#cdeede;color:#0f9b63}
+  .chip-soft.possible{background:#fcf3e2;border-color:#f0e2c0;color:#b9842b}
+
+  /* ── Stage-3: manual Check -> Fix ── */
+  .fix-row{margin-top:11px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<!-- top bar -->
+<div class="topbar">
+  <div class="brand"><img class="logo" src="/static/logo.svg" alt="ModouGPT"></div>
+  <div class="scene-label" id="sceneLabel"></div>
+  <div class="topbar-right">
+    <div class="model-pick">
+      <span>Please Select Model:</span>
+      <select id="modelSel">
+        <option value="auto">auto (local FT &#8594; API)</option>
+        <option value="api">api</option>
+      </select>
+      <button class="btn btn-primary" id="newBtn">+ New</button>
+    </div>
+  </div>
+</div>
+
+<!-- welcome -->
+<section class="welcome" id="welcome">
+  <div class="logo-lg"><img class="logo" src="/static/logo.svg" alt="ModouGPT"></div>
+  <h1>Hello, welcome to ModouGPT</h1>
+  <div class="scene-bar">
+    <div class="hint">Select a theme scene, then describe your optimization problem to start.</div>
+    <div class="chips" id="chips"></div>
+  </div>
+</section>
+
+<!-- workspace -->
+<section class="workspace hidden" id="workspace">
+  <!-- left: conversation -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="title">Conversation</span>
+      <span class="subtle" id="leftHint" style="margin-left:auto">Describe the basic problem &#8595;</span>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div class="chat-input">
+      <textarea id="chatBox" placeholder="Describe the basic problem, or add a new constraint&#8230;"></textarea>
+      <button class="send" id="sendBtn" title="Send">&#10148;</button>
+    </div>
+  </div>
+
+  <!-- right -->
+  <div class="panel">
+
+    <!-- staged view: Formal Expression -> Math Model -> Code -->
+    <div id="manualView" class="hidden" style="display:flex;flex-direction:column;height:100%">
+      <div class="panel-head">
+        <span class="title" id="manualTitle">Formal Expression</span>
+        <span class="manual-busy hidden" id="manualBusy"></span>
+        <div class="tabs" style="gap:12px;margin-left:auto">
+          <span class="tab hidden" id="manualBack" style="cursor:pointer">&#8249; Back</span>
+          <span class="tab hidden" id="manualEditToggle" style="cursor:pointer">&#9998; Edit</span>
+        </div>
+      </div>
+      <div class="stepper" id="manualStepper"></div>
+      <div class="model-body" id="manualBody"></div>
+      <textarea class="editor hidden" id="manualEditor" spellcheck="false"></textarea>
+      <div class="panel-foot" id="manualFoot"></div>
+      <div class="result-box hidden" id="manualResult"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => (s==null?"":s.toString()).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const escapeHtml = esc;
+
+let SID=null, SCENE=null, SAMPLES={}, hasResult=false;
+let busy=false;
+
+/* staged-mode state */
+const STAGE_TITLES={1:"Formal Expression",2:"Mathematical Model",3:"CP Code"};
+let manualNL="";
+let curStage=1, maxStage=1;
+let mData={1:null,2:null,3:null};   // 1:{formal_expr,aux}  2:math_model  3:code(str)
+let editing=false, editBase="";
+
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);}
+function logConsole(){/* Console window is not shown — pipeline logs are not surfaced in the UI */}
+
+async function api(path,body){
+  const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(body||{})});
+  return r.json();
+}
+
+// ── init ──
+async function init(){
+  const r=await (await fetch("/api/scenes")).json();
+  SAMPLES=r.samples;
+  const box=$("#chips");
+  r.scenes.forEach(s=>{
+    const c=document.createElement("button");
+    c.className="chip";c.innerHTML=`<span class="ic">${esc(s.icon)}</span><span>${esc(s.label)}</span>`;
+    c.onclick=()=>selectScene(s.id,s.label,c);
+    box.appendChild(c);
+  });
+  const go=document.createElement("div");go.className="go";go.textContent="\u279c";
+  go.onclick=enterWorkspace;box.appendChild(go);
+}
+function selectScene(id,label,el){
+  SCENE=id;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+  el.classList.add("active");
+  $("#sceneLabel").innerHTML=`Current Scene: <b>${esc(label)}</b>`;
+}
+function enterWorkspace(){
+  if(!SCENE){toast("Please select a scene first.");return;}
+  $("#welcome").classList.add("hidden");
+  $("#workspace").classList.remove("hidden");
+  $("#chatBox").value = SAMPLES[SCENE] || "";
+  $("#manualView").classList.remove("hidden");
+  renderManualEmpty();
+  addMsg("bot","Assistant for "+SCENE+
+    ".\nDescribe the problem below and press send to generate the Formal Expression (step 1 of 3).");
+}
+$("#newBtn").onclick=()=>location.reload();
+
+// ── chat ──
+function addMsg(role,text){
+  const m=document.createElement("div");m.className="msg "+role;
+  m.innerHTML=`<div class="role">${role==="user"?"You":"Assistant"}</div><div>${esc(text)}</div>`;
+  $("#chat").appendChild(m);$("#chat").scrollTop=1e9;
+  return m;
+}
+
+function setBusy(b,msg){busy=b;$("#sendBtn").disabled=b;
+  $("#leftHint").innerHTML=b?`<span class="spinner"></span> ${msg||"Working\u2026"}`:"";}
+function setBusyR(b,msg){
+  busy=b;$("#sendBtn").disabled=b;
+  document.querySelectorAll("#manualFoot .btn").forEach(x=>x.disabled=b);
+  $("#manualBusy").innerHTML=b?`<span class="spinner"></span> ${msg||"Working\u2026"}`:"";
+  $("#manualBusy").classList.toggle("hidden",!b);
+}
+
+$("#sendBtn").onclick=send;
+$("#chatBox").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.ctrlKey||e.metaKey))send();});
+
+async function send(){
+  const txt=$("#chatBox").value.trim();
+  if(!txt||busy)return;
+  addMsg("user",txt);$("#chatBox").value="";
+  return sendManual(txt);
+}
+
+// shared presentation helpers
+function secH(t){return `<div class="sec-h">${esc(t)}</div>`;}
+function objCard(dir,expr,note){
+  let h=`<div class="obj-card"><div class="lbl">\u25CE Objective <span class="dirpill">${esc((dir||"").toUpperCase()||"\u2014")}</span></div>`+
+        `<div class="expr">${esc(expr||"\u2014")}</div>`;
+  if(note) h+=`<div class="note">${esc(note)}</div>`;
+  return h+`</div>`;
+}
+
+// shared result renderers
+function checkReportHTML(rp){
+  const cls=rp.overall_valid?"ok":(rp.score>=.6?"warn":"bad");
+  let h=`<h4>Validation <span class="pill ${cls}">${(rp.score||0).toFixed(2)} / 1.00</span></h4>`+
+        `<div class="subtle">syntax: ${rp.syntax_ok} \u00B7 static: ${rp.static_ok} \u00B7 valid: ${rp.overall_valid}`+
+        (rp.dynamic_ok!=null?` \u00B7 solver: ${esc(rp.solver_status||(rp.dynamic_ok?"ran":"failed"))}`:``)+
+        (rp.objective!=null?` \u00B7 obj: ${esc(String(rp.objective))}`:``)+
+        (rp.coverage_ratio!=null?` \u00B7 coverage: ${Math.round(rp.coverage_ratio*100)}%`:``)+`</div>`;
+  if((rp.errors||[]).length) h+=`<pre class="mono">${esc(rp.errors.join("\n"))}</pre>`;
+  if((rp.suggestions||[]).length) h+=`<pre class="mono">${esc(rp.suggestions.join("\n"))}</pre>`;
+  return h;
+}
+/* Manual Check -> Fix flow: render the validation report, and when it fails,
+   offer a button to run ONE repair pass on the current code. The user drives the
+   iteration: Check, see errors, Fix, Check again. */
+function showCheck(rp){
+  const rb=$("#manualResult");
+  if(!rb) return;
+  let h=checkReportHTML(rp);
+  if(!rp.overall_valid || (rp.errors&&rp.errors.length)){
+    h+=`<div class="fix-row"><button class="btn btn-soft" id="mFixBtn">\u27F3 Fix Issues</button>`+
+       `<span class="dim">Run one repair pass on the current code, then check again.</span></div>`;
+  }
+  rb.innerHTML=h; rb.classList.remove("hidden");
+  const fb=$("#mFixBtn"); if(fb) fb.onclick=mFix;
+}
+function solveResultHTML(s){
+  const cls=s.status==="solved"?"ok":(s.status==="error"?"bad":"warn");
+  let h=`<h4>Solve result <span class="pill ${cls}">${esc(s.status)}</span></h4>`+
+        `<div class="subtle">objective: <b>${esc(String(s.objective))}</b> \u00B7 time: ${esc(String(s.solve_time))}s</div>`;
+  if(s.solution_text) h+=`<pre class="mono">${esc(s.solution_text)}</pre>`;
+  if(s.status==="error"&&s.error_msg) h+=`<pre class="mono">${esc(s.error_msg)}</pre>`;
+  return h;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   MANUAL (step-by-step) mode
+   step 1 Formal Expression -> step 2 Math Model -> step 3 CP Code
+   Each step is editable; edits are passed into the next step's generation.
+   ════════════════════════════════════════════════════════════════════ */
+async function sendManual(txt){
+  // Every message is folded into the problem description and the WHOLE problem is
+  // re-formalized via the framework's NL-structuring step. So a newly added constraint
+  // becomes a proper formalized entry in the Formal Expression (not raw text), and the
+  // whole updated formulation is then carried forward through Model -> Code.
+  const first=!SID;
+  const hadCode=(maxStage>=3);
+  manualNL = manualNL ? (manualNL+"\n"+txt) : txt;
+  setBusy(true,"Formalizing…");
+  const r=await api("/api/formalize",{description:manualNL,scene:SCENE,session_id:SID});
+  setBusy(false);logConsole(r.logs);
+  if(r.status!=="success"){addMsg("bot","⚠ "+(r.message||"failed"));return;}
+  SID=r.session_id;hasResult=true;
+  mData={1:r.data,2:null,3:null}; curStage=1; maxStage=1; editing=false;
+  addMsg("bot", first
+    ? "Formal Expression generated (step 1/3). Review or edit it on the right, then click “Generate Model”."
+    : (hadCode
+        ? "New constraint formalized and merged into the Formal Expression (step 1/3). Review or edit it, then Generate Model → Generate Code to carry the whole updated formulation forward."
+        : "Re-derived the Formal Expression with your added description (step 1/3). Continue with “Generate Model”."));
+  renderManual();
+}
+
+function updateLeftHint(){
+  if(SID && maxStage>=3){
+    $("#leftHint").textContent="Add a new constraint, then send →";
+    $("#chatBox").placeholder="Add a new constraint — it gets formalized into the formulation…";
+  }else if(SID){
+    $("#leftHint").textContent="Refine the problem, or continue on the right →";
+    $("#chatBox").placeholder="Describe the problem, or add more detail…";
+  }else{
+    $("#leftHint").textContent="Describe the basic problem ↓";
+    $("#chatBox").placeholder="Describe the basic problem…";
+  }
+}
+
+function stepperHTML(){
+  let h="";
+  for(let i=1;i<=3;i++){
+    const cls=i===curStage?"step active":(i<=maxStage?"step done":"step");
+    h+=`<span class="${cls}" data-step="${i}"><b>${i}</b> ${STAGE_TITLES[i]}</span>`;
+    if(i<3) h+=`<span class="step-sep">›</span>`;
+  }
+  return h;
+}
+function bindStepper(){
+  document.querySelectorAll("#manualStepper .step").forEach(el=>{
+    const s=+el.dataset.step;
+    if(s<=maxStage && s!==curStage) el.onclick=()=>goStage(s);
+  });
+}
+function renderManualEmpty(){
+  curStage=1;maxStage=1;mData={1:null,2:null,3:null};editing=false;manualNL="";
+  $("#manualTitle").innerHTML=`Formal Expression`;
+  $("#manualStepper").innerHTML=stepperHTML();
+  $("#manualBody").innerHTML=`<div class="subtle">Describe the problem on the left and press send.
+    The Formal Expression (step 1 of 3) will appear here, ready to review and edit.</div>`;
+  $("#manualBody").classList.remove("hidden");
+  $("#manualEditor").classList.add("hidden");
+  $("#manualFoot").innerHTML="";
+  $("#manualResult").classList.add("hidden");
+  $("#manualBack").classList.add("hidden");
+  $("#manualEditToggle").classList.add("hidden");
+  updateLeftHint();
+}
+function renderManual(){
+  editing=false;
+  $("#manualTitle").innerHTML=`${STAGE_TITLES[curStage]}`+
+        `<span class="stage-badge">Step ${curStage} / 3</span>`;
+  $("#manualStepper").innerHTML=stepperHTML();bindStepper();
+  if(curStage>1){$("#manualBack").classList.remove("hidden");
+    $("#manualBack").textContent="‹ Back to "+STAGE_TITLES[curStage-1];}
+  else $("#manualBack").classList.add("hidden");
+  $("#manualEditToggle").classList.remove("hidden");
+  $("#manualEditToggle").textContent="✎ Edit";
+  $("#manualEditor").classList.add("hidden");
+  $("#manualBody").classList.remove("hidden");
+  $("#manualBody").innerHTML=previewHTML(curStage);
+  $("#manualFoot").innerHTML=footHTML(curStage);bindFoot();
+  $("#manualResult").classList.add("hidden");
+  updateLeftHint();
+}
+
+function previewHTML(stage){
+  if(stage===1) return previewFormal(mData[1]||{});
+  if(stage===2) return previewMath(mData[2]||{});
+  return `<div class="code-head"><span class="dot"></span><span class="nm">generated code</span>`+
+         `<span class="lang">python · docplex</span></div>`+
+         `<pre class="code-block tagged">${esc(mData[3]||"")}</pre>`+
+         `<div class="edit-hint dim">Tip: click ✎ Edit to adjust the code directly. Check, Run Solver and Save to KB use your edited code.</div>`;
+}
+function previewFormal(d){
+  const fe=d.formal_expr||{};
+  let h=`<div class="meta"><span class="mpill accent">Type · <b>${esc(fe.problem_type||"—")}</b></span></div>`;
+  if(fe.problem_summary) h+=`<div class="callout">${esc(fe.problem_summary)}</div>`;
+  if((fe.decision_variables||[]).length){
+    h+=secH("Decision variables")+`<ul class="cgrid">`;
+    fe.decision_variables.forEach(v=>{h+=`<li class="card"><span class="tok">${esc(v.name||"")}</span>`+
+       (v.type?` <span class="cpill">${esc(v.type)}</span>`:``)+
+       (v.description?`<div class="desc">${esc(v.description)}</div>`:``)+
+       (v.domain?`<div class="kv">domain: <code>${esc(v.domain)}</code></div>`:``)+`</li>`;});
+    h+=`</ul>`;
+  }
+  if((fe.parameters||[]).length){
+    h+=secH("Parameters / data")+`<ul class="cgrid">`;
+    fe.parameters.forEach(p=>{h+=`<li class="card"><span class="tok">${esc(p.name||"")}</span>`+
+       (p.value_or_source?` <span class="cpill">${esc(p.value_or_source)}</span>`:``)+
+       (p.description?`<div class="desc">${esc(p.description)}</div>`:``)+`</li>`;});
+    h+=`</ul>`;
+  }
+  h+=secH("Constraints")+`<ul class="cgrid">`;
+  (fe.constraints||[]).forEach(c=>{h+=`<li class="card"><div class="crow">`+
+     `<span class="cbadge">${esc(c.id||"")}</span>`+
+     `<div class="cmain"><div class="desc" style="margin-top:0">${esc(c.description||"")}</div></div>`+
+     (c.type?`<span class="cpill">${esc(c.type)}</span>`:``)+`</div></li>`;});
+  h+=`</ul>`;
+  const o=fe.objective||{};
+  h+=objCard(o.direction,o.expression,o.description);
+  h+=disambigBlock(d.aux);
+  h+=`<div class="edit-hint dim">Tip: click ✎ Edit to adjust the formal expression
+      (problem_type, problem_summary, decision_variables, parameters, constraints, objective).
+      Your edits are passed into the model step. The disambiguation confidence and certainty
+      classification below are read-only RAG-FCA context.</div>`;
+  return h;
+}
+/* Read-only RAG-FCA context shown at the bottom of the Formal-Expression stage:
+   (1) semantic-disambiguation confidence — matched-concept intent-similarity
+       scores (paper Eq.15); (2) constraint certainty classification — certain
+       (lower approximation) vs possible (upper approximation) implicit constraints.
+   Both already come from the framework; this only renders them. */
+function disambigBlock(aux){
+  aux = aux || {};
+  const dis      = aux.disambiguation   || [];
+  const dom      = aux.matched_domain   || "";
+  const certain  = aux.certain_implicit || [];
+  const possible = aux.possible_implicit|| [];
+  let h="";
+
+  // (1) Semantic disambiguation confidence — single top score
+  h+=secH("Semantic Disambiguation Confidence");
+  const topScore = dis.length ? (Number(dis[0].score)||0) : null;
+  if(topScore!=null){
+    const pct=Math.max(4,Math.round(topScore*100));
+    h+=`<div class="conf-card"><div class="conf-top">`+
+         (dom?`<span class="mpill accent">Matched domain · <b>${esc(dom)}</b></span>`:`<span class="dim">best match</span>`)+
+         `<span class="conf-num">${topScore.toFixed(3)}</span>`+
+       `</div><div class="score-bar"><i style="width:${pct}%"></i></div></div>`;
+    h+=`<div class="kv dim" style="margin-top:8px">Intent-similarity (0–1, paper Eq.15) between the
+        disambiguated query attribute set Q' and the best-matching formal concept; this top match
+        decides the problem domain.</div>`;
+  }else{
+    h+=`<div class="callout dim">No matched concept was returned for this formulation.</div>`;
+  }
+
+  // (2) Constraint certainty classification (rough-set lower/upper approximation)
+  h+=secH("Constraint Certainty Classification");
+  h+=`<div class="kv dim" style="margin:-2px 0 10px">Implicit constraints discovered over the matched
+      records (rough-set lower/upper approximation): <b>Certain</b> = appears in <i>every</i> matched
+      record; <b>Possible</b> = appears in only <i>some</i>. An empty Certain set is normal here — the
+      constraints shared by all records are already folded into the formal expression (Q') above, so
+      what remains are the variant constraints that only some records carry.</div>`;
+  const grp=(title,sub,items,kind)=>{
+    let g=`<div class="cls-group ${kind}"><div class="cls-head">${esc(title)} <span class="dim">${esc(sub)}</span></div>`;
+    g+=(items&&items.length)
+        ? `<div class="chip-row">`+items.map(x=>`<span class="chip-soft ${kind}">${esc(x)}</span>`).join("")+`</div>`
+        : `<div class="kv dim">— (none)</div>`;
+    return g+`</div>`;
+  };
+  h+=`<div class="cls-wrap">`+
+     grp("Certain","in every matched record · lower approximation",certain,"certain")+
+     grp("Possible","in some matched records · upper approximation",possible,"possible")+
+     `</div>`;
+  return h;
+}
+function previewMath(mm){
+  mm = mm || {};
+  // The Stage-2 model may come back in either the fine-tuned schema
+  // (model_title / *_section) or the generic schema (decision_variables /
+  // parameters / constraints / objective), the latter sometimes nested under a
+  // "model" key (e.g. when the API fallback is used instead of the FT model).
+  // Normalize both so the panel always renders the content it actually has.
+  if(mm.model && typeof mm.model==="object" &&
+     !mm.variables_section && !mm.constraints_section && !mm.decision_variables)
+    mm = mm.model;
+  const vars   = mm.variables_section  || mm.decision_variables || [];
+  const params = mm.parameters_section || mm.parameters         || [];
+  const cons   = mm.constraints_section|| mm.constraints         || [];
+  const obj    = mm.objective_section  || mm.objective           || {};
+  const title  = mm.model_title || mm.title || "Model";
+
+  let h=`<div class="meta"><span class="mpill accent">${esc(title)}</span>`+
+        (mm.model_type?`<span class="mpill">${esc(mm.model_type)}</span>`:``)+`</div>`;
+  if(mm.complexity_note) h+=`<div class="callout">${esc(mm.complexity_note)}</div>`;
+  if(vars.length){
+    h+=secH("Variables")+`<ul class="cgrid">`;
+    vars.forEach(v=>{const vt=v.var_type||v.type, dom=v.domain_or_size||v.dimensions||v.domain;
+       h+=`<li class="card"><span class="tok">${esc(v.symbol||v.name||"")}</span>`+
+       (vt?` <span class="cpill">${esc(vt)}</span>`:``)+
+       (v.description?`<div class="desc">${esc(v.description)}</div>`:``)+
+       (dom?`<div class="kv">domain: <code>${esc(dom)}</code></div>`:``)+`</li>`;});
+    h+=`</ul>`;
+  }
+  if(params.length){
+    h+=secH("Parameters")+`<ul class="cgrid">`;
+    params.forEach(p=>{const pv=(p.value!=null&&p.value!=="")?p.value:p.value_or_source;
+       h+=`<li class="card"><span class="tok">${esc(p.symbol||p.name||"")}</span>`+
+       ((pv!=null&&pv!=="")?` <span class="cpill">${esc(pv)}</span>`:``)+
+       (p.description?`<div class="desc">${esc(p.description)}</div>`:``)+`</li>`;});
+    h+=`</ul>`;
+  }
+  h+=secH("Constraints")+`<ul class="cgrid">`;
+  cons.forEach(c=>{const expr=c.math_expression||c.expression;
+     h+=`<li class="card"><div class="crow">`+
+     `<span class="cbadge">${esc(c.id||"")}</span>`+
+     `<div class="cmain"><b>${esc(c.name||c.type||"")}</b>`+
+     (expr?`<div class="formula">${esc(expr)}</div>`:``)+
+     (c.docplex_expression?`<div class="kv">docplex: <code>${esc(c.docplex_expression)}</code></div>`:``)+
+     (c.scope?`<div class="kv">scope: <code>${esc(c.scope)}</code></div>`:``)+
+     (c.description?`<div class="desc">${esc(c.description)}</div>`:``)+
+     `</div></div></li>`;});
+  h+=`</ul>`;
+  h+=objCard(obj.direction, obj.math_expression||obj.expression, obj.description);
+  if(obj.docplex_expression) h+=`<div class="kv" style="margin-top:8px">docplex: <code>${esc(obj.docplex_expression)}</code></div>`;
+
+  // If nothing rendered, show a clear message (and any raw response) instead of a blank panel.
+  if(!vars.length && !params.length && !cons.length &&
+     !(obj.direction||obj.expression||obj.math_expression)){
+    h=`<div class="meta"><span class="mpill accent">${esc(title)}</span></div>`+
+      `<div class="callout dim">The mathematical model came back empty or in an unrecognized shape.
+       Open the console (bottom-right) to see the Stage-2 backend used and its raw response.`+
+      (mm.raw_response?` <br>Raw: <code>${esc(String(mm.raw_response).slice(0,240))}</code>`:``)+
+      `</div>`;
+  }
+  h+=`<div class="edit-hint dim">Tip: click ✎ Edit to adjust the math model JSON. Your edits are passed into code generation.</div>`;
+  return h;
+}
+
+function footHTML(stage){
+  if(stage===1) return `<button class="btn btn-soft" id="toModelBtn">▣ Generate Model ▸</button>`;
+  if(stage===2) return `<button class="btn btn-soft" id="toCodeBtn">▣ Generate Code ▸</button>`;
+  return `<button class="btn btn-ghost" id="mCheckBtn">✓ Check</button>`+
+         `<button class="btn btn-ghost" id="mSaveBtn">💾 Save to KB</button>`+
+         `<button class="btn btn-primary" id="mRunBtn">▷ Run Solver</button>`;
+}
+function bindFoot(){
+  const tm=$("#toModelBtn"); if(tm) tm.onclick=toModel;
+  const tc=$("#toCodeBtn");  if(tc) tc.onclick=toCode;
+  const mc=$("#mCheckBtn");  if(mc) mc.onclick=mCheck;
+  const mr=$("#mRunBtn");    if(mr) mr.onclick=mRun;
+  const ms=$("#mSaveBtn");   if(ms) ms.onclick=mSave;
+}
+
+async function toModel(){
+  if(editing && !commitEditor()) return;
+  editing=false;
+  setBusyR(true,"Generating mathematical model…");
+  const r=await api("/api/build_model",{session_id:SID,formal_expr:(mData[1]||{}).formal_expr});
+  setBusyR(false);logConsole(r.logs);
+  if(r.status!=="success"){manualErr(r.message);toast("Model generation failed");return;}
+  mData[2]=r.data; mData[3]=null; curStage=2; maxStage=2;
+  renderManual();
+  addMsg("bot","Mathematical Model generated (step 2/3). Review or edit it, then click “Generate Code”.");
+}
+async function toCode(){
+  if(editing && !commitEditor()) return;
+  editing=false;
+  setBusyR(true,"Generating CP code…");
+  const r=await api("/api/build_code",{session_id:SID,math_model:mData[2]});
+  setBusyR(false);logConsole(r.logs);
+  if(r.status!=="success"){manualErr(r.message);toast("Code generation failed");return;}
+  mData[3]=r.code||""; curStage=3; maxStage=3;
+  renderManual();
+  addMsg("bot","CP code generated (step 3/3). Click \u2713 Check to validate it; if issues are found you can Fix them. Then Run Solver / Save to KB.");
+}
+function goStage(s){
+  if(busy||s<1||s>maxStage||s===curStage) return;
+  if(editing && !commitEditor()) return;
+  editing=false; curStage=s; renderManual();
+}
+$("#manualBack").onclick=()=>goStage(curStage-1);
+
+function manualErr(msg){const rb=$("#manualResult");rb.classList.remove("hidden");
+  rb.innerHTML=`<h4>Error</h4><pre class="mono">${esc(msg||"failed")}</pre>`;}
+
+async function mCheck(){
+  if(!SID)return; if(editing && !commitEditor()) return;
+  const r=await api("/api/check",{session_id:SID,code:mData[3]});
+  if(r.status!=="success"){toast("Check failed");manualErr(r.message);return;}
+  showCheck(r.report);
+}
+async function mFix(){
+  if(!SID)return;
+  const rb=$("#manualResult");
+  rb.classList.remove("hidden");
+  rb.innerHTML=`<h4>Fixing\u2026 <span class="spinner"></span></h4>`;
+  const r=await api("/api/fix",{session_id:SID,code:mData[3]});
+  if(r.status!=="success"){toast("Fix failed");manualErr(r.message);return;}
+  mData[3]=r.code||mData[3];
+  renderManual();               // re-render the updated code (step 3)
+  showCheck(r.report);          // show new validation result (+ Fix again if still failing)
+  const rp=r.report||{};
+  const sc=(rp.score!=null)?Number(rp.score).toFixed(2):"\u2014";
+  addMsg("bot","Applied one repair pass (validation "+sc+"). "+
+               (rp.overall_valid?"The code now passes validation.":"Run Check or Fix again if needed."));
+}
+async function mRun(){
+  if(!SID)return; if(editing && !commitEditor()) return;
+  const rb=$("#manualResult");rb.classList.remove("hidden");
+  rb.innerHTML=`<h4>Solving… <span class="spinner"></span></h4>`;
+  const r=await api("/api/solve",{session_id:SID,code:mData[3],time_limit:60});logConsole(r.logs);
+  if(r.status!=="success"){rb.innerHTML=`<h4>Solve error</h4><pre class="mono">${esc(r.message||"")}</pre>`;return;}
+  rb.innerHTML=solveResultHTML(r.result);
+}
+async function mSave(){
+  if(!SID)return; if(editing && !commitEditor()) return;
+  if(!confirm("Save this result to the knowledge base?\nOnly a genuinely new constraint set is added; exact duplicates are skipped."))return;
+  const r=await api("/api/save_kb",{session_id:SID,code:mData[3]});logConsole(r.logs);
+  if(r.status!=="success"){toast("Save failed");return;}
+  toast(r.added?`Saved. KB now ${r.records} records, ${r.concepts} concepts.`:`Not saved: ${r.reason}`);
+}
+
+// editing (edits feed the next stage)
+function currentEditorText(stage){
+  if(stage===3) return mData[3]||"";
+  const base = stage===1 ? (mData[1]||{}).formal_expr : mData[2];
+  return JSON.stringify(base||{},null,2);
+}
+function invalidateDownstream(stage){
+  if(stage<=1){mData[2]=null;mData[3]=null;maxStage=Math.min(maxStage,1);}
+  else if(stage===2){mData[3]=null;maxStage=Math.min(maxStage,2);}
+}
+function commitEditor(){
+  const v=$("#manualEditor").value;
+  const changed = v!==editBase;
+  if(curStage===3){ mData[3]=v; return true; }
+  let obj;
+  try{ obj=JSON.parse(v); }
+  catch(e){ toast("Invalid JSON — "+e.message); return false; }
+  if(curStage===1){ if(!mData[1]) mData[1]={}; mData[1].formal_expr=obj; }
+  else { mData[2]=obj; }
+  if(changed) invalidateDownstream(curStage);
+  return true;
+}
+function enterEdit(){
+  editing=true; editBase=currentEditorText(curStage);
+  $("#manualEditToggle").textContent="👁 Preview";
+  $("#manualBody").classList.add("hidden");
+  $("#manualEditor").classList.remove("hidden");
+  $("#manualEditor").value=editBase;
+  $("#manualEditor").focus();
+}
+$("#manualEditToggle").onclick=()=>{
+  if(busy)return;
+  if(!editing){ enterEdit(); }
+  else { if(commitEditor()) renderManual(); }
+};
+
+init();
+</script>
+</body>
+</html>
