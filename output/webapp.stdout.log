@@ -1,7 +1,0 @@
-Loading knowledge base...
-[KB] Loaded 5 canonical formal-expression references from formal_expression_refs.json.
-[KB] Loaded knowledge base from JSON ¡ú D:\ÓÃ»§\szq\Desktop\CPAMLLM\cpam_llm29-01\CPAM_LLM_organized\kb_store\knowledge_base.json
-  [KB] 140 records, 138 concepts, 54 attributes  (built 2026-06-27 15:12:32)
-CPAM-LLM web app ready ¡ú http://127.0.0.1:5000
- * Serving Flask app 'app'
- * Debug mode: off

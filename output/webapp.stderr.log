@@ -1,9 +1,0 @@
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://127.0.0.1:5000
-Press CTRL+C to quit
-127.0.0.1 - - [27/Jun/2026 15:19:06] "GET /api/kbinfo HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jun/2026 15:21:15] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jun/2026 15:21:15] "GET /api/scenes HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jun/2026 15:21:15] "GET /static/logo.svg HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jun/2026 15:21:15] "GET /favicon.ico HTTP/1.1" 404 -
-127.0.0.1 - - [27/Jun/2026 15:21:21] "POST /api/formalize HTTP/1.1" 500 -
