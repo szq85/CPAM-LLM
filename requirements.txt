@@ -1,0 +1,30 @@
+# CPAM-LLM runtime dependencies.
+#
+# Python 3.9+ is supported; the Docker runtime uses Python 3.11.
+# Install locally with:
+#   python -m pip install -r requirements.txt
+
+# OpenAI-compatible HTTP client for cloud and local LLM endpoints.
+requests>=2.31,<3
+
+# RAG-FCA knowledge base construction and tabular example-data handling.
+numpy>=1.26,<3
+pandas>=2.0,<3
+openpyxl>=3.1,<4
+
+# docplex provides the Python modeling API. Solving generated models still
+# requires IBM ILOG CPLEX Optimization Studio / CP Optimizer installed outside
+# pip and licensed separately.
+docplex>=2.25,<3
+
+# Browser UI.
+Flask>=3.0,<4
+flask-cors>=4.0,<7
+
+# WSGI server used by the Docker image.
+waitress>=3.0,<4
+
+# Not listed here on purpose:
+# - tkinter for gui_app.py is provided by the OS/Python distribution.
+# - vLLM, LLaMA-Factory, torch, transformers, and LoRA/model weights belong on
+#   the GPU model-serving host. See docs/MODEL_SERVING.md.

@@ -1,0 +1,99 @@
+{
+  "Aircraft Skin Processing": {
+    "constraint_types": [
+      "alternative",
+      "precedence",
+      "no_overlap",
+      "time_window",
+      "sequence"
+    ],
+    "param_order": [
+      "NB_JOBS",
+      "NB_MACHINES",
+      "JOBS",
+      "CONSTRAINTS"
+    ]
+  },
+  "Battery Pack Design": {
+    "constraint_types": [
+      "parallel_consistency",
+      "voltage_lower_bound",
+      "voltage_upper_bound",
+      "current_capacity",
+      "load_balance",
+      "switching",
+      "locality",
+      "degradation"
+    ],
+    "param_order": [
+      "NUM_PARALLEL_MODULES",
+      "NUM_SERIES_COLUMNS",
+      "NUM_PERIODS",
+      "C[k][i][j]",
+      "R[k][i][j]",
+      "V[k][i][j]",
+      "CELL_NOMINAL_VOLTAGE",
+      "V_lower[k]",
+      "V_upper[k]",
+      "I_load[k]",
+      "I_MAX_MODULE"
+    ]
+  },
+  "Charging Station Location": {
+    "constraint_types": [
+      "activation_load",
+      "pack",
+      "cost_cap",
+      "fixed_cost_bound",
+      "geographic_spread",
+      "scale",
+      "utilization"
+    ],
+    "param_order": [
+      "nbDemandAreas",
+      "nbLocations",
+      "cost[c][p]",
+      "demand[c]",
+      "fixedCost[p]",
+      "capacity[p]"
+    ]
+  },
+  "DNA Sequence Design": {
+    "constraint_types": [
+      "allowed_assignments",
+      "gc_content",
+      "hamming_distance",
+      "rev_complement",
+      "end_gc",
+      "forbidden_pattern",
+      "global_balance",
+      "no_repeat_pair"
+    ],
+    "param_order": [
+      "n_words",
+      "word_length",
+      "word_list",
+      "complement_map"
+    ]
+  },
+  "VRP": {
+    "constraint_types": [
+      "service_coverage",
+      "flow_conservation",
+      "depot_constraint",
+      "capacity",
+      "subtour_elimination",
+      "time_window",
+      "exclusion",
+      "capacity_relaxed",
+      "capacity_setting"
+    ],
+    "param_order": [
+      "num_vehicles",
+      "vehicle_capacity",
+      "num_locations",
+      "demands[i]",
+      "distance_matrix"
+    ]
+  }
+}

@@ -1,0 +1,703 @@
+{
+  "task_id": "task_20260625_145229",
+  "timestamp": "2026-06-25T14:52:29.828946",
+  "input": {
+    "natural_language": "This problem arises from aircraft manufacturing where multiple skin components need to be processed through a series of operations. In the flexible job shop scheduling environment, each job (representing an aircraft skin component) must be processed according to a predefined sequence of operations. Each operation can be performed on multiple candidate machines with different processing times, providing flexibility in machine selection. However, each machine can process only one operation at a time, ensuring no resource conflicts. The system automatically handles temporal constraints between consecutive operations: tight constraints require intervals of 15 time units or less, while loose constraints require intervals of 30 time units or more. The objective is to minimize the makespan, which represents the maximum completion time across all jobs, thus optimizing the overall production efficiency. Write a Python program using the docplex.cp module (IBM CP Optimizer) to solve this flexible job shop scheduling problem. The input data should be read from a file named \"fjsp_location_newdataset_1.fjs\" located in the data subdirectory. The file format is as follows: the first line contains the number of jobs and machines; subsequent lines contain job information with the number of operations, and for each operation, the number of candidate machines followed by machine-duration pairs, and temporal constraint types ('tight', 'loose', or 'none')."
+  },
+  "knowledge_base_summary": {
+    "total_records": 140,
+    "problem_types": {
+      "Aircraft Skin Processing": 61,
+      "Battery Pack Design": 16,
+      "Charging Station Location": 31,
+      "DNA Sequence Design": 16,
+      "VRP": 16
+    },
+    "total_concepts": 138,
+    "total_attributes": 54,
+    "pending_since_rebuild": 0,
+    "update_policy": "strict",
+    "query_log_size": 0,
+    "top_attributes": [
+      {
+        "attribute": "aircraft_skin_processing",
+        "weight": 1.0
+      },
+      {
+        "attribute": "arc_existence",
+        "weight": 1.0
+      },
+      {
+        "attribute": "base_composition_balance",
+        "weight": 1.0
+      },
+      {
+        "attribute": "battery_pack_design",
+        "weight": 1.0
+      },
+      {
+        "attribute": "battery_pack_voltage_range",
+        "weight": 1.0
+      }
+    ]
+  },
+  "pipeline_stages": {
+    "stage1_nl_structuring": {
+      "status": "success",
+      "output": {
+        "problem_type": "Aircraft Skin Processing",
+        "problem_summary": "Flexible job shop scheduling for aircraft skin components. Each job consists of ordered operations, each assignable to candidate machines with given processing times. Minimize makespan.",
+        "decision_variables": [
+          {
+            "name": "x[j][o]",
+            "type": "interval_var",
+            "description": "Master interval variable for operation o of job j.",
+            "domain": "non-negative"
+          },
+          {
+            "name": "x[j][o][m]",
+            "type": "interval_var (optional)",
+            "description": "Optional interval variable for operation o of job j on machine m.",
+            "domain": "size=p[j][o][m], optional=True"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "NB_JOBS",
+            "description": "Number of jobs.",
+            "value_or_source": "input file fjsp_location_newdataset_1.fjs"
+          },
+          {
+            "name": "NB_MACHINES",
+            "description": "Number of machines.",
+            "value_or_source": "input file"
+          },
+          {
+            "name": "JOBS",
+            "description": "Nested list: job→operation→[(machine,duration)].",
+            "value_or_source": "input file"
+          },
+          {
+            "name": "CONSTRAINTS",
+            "description": "Per-operation temporal constraint type: tight/loose/none.",
+            "value_or_source": "input file"
+          }
+        ],
+        "constraints": [
+          {
+            "id": "C1",
+            "type": "alternative",
+            "description": "Each operation is executed on exactly one machine."
+          },
+          {
+            "id": "C2",
+            "type": "precedence",
+            "description": "Operations within a job execute in sequence."
+          },
+          {
+            "id": "C3",
+            "type": "no_overlap",
+            "description": "Each machine executes at most one operation at a time."
+          },
+          {
+            "id": "C4",
+            "type": "time_window",
+            "description": "Tight constraint: gap between consecutive ops <= 15."
+          },
+          {
+            "id": "C5",
+            "type": "time_window",
+            "description": "Loose constraint: gap between consecutive ops >= 30."
+          }
+        ],
+        "objective": {
+          "direction": "minimize",
+          "expression": "minimize(max([endOf(x[j][o]) for all j,o]))",
+          "description": "Minimize makespan."
+        },
+        "implicit_constraints": [
+          "non_preemption",
+          "operation_precedence",
+          "resource_capacity_no_overlap",
+          "resource_flexibility",
+          "inter_job_precedence",
+          "job_start_time_window",
+          "job_temporal_bounds",
+          "operation_end_time_window",
+          "operation_level_precedence",
+          "sequence_dependent_setup"
+        ],
+        "certain_implicit": [
+          "non_preemption",
+          "operation_precedence",
+          "resource_capacity_no_overlap",
+          "resource_flexibility"
+        ],
+        "possible_implicit": [
+          "inter_job_precedence",
+          "job_start_time_window",
+          "job_temporal_bounds",
+          "operation_end_time_window",
+          "operation_level_precedence",
+          "sequence_dependent_setup"
+        ],
+        "formal_templates": [
+          {
+            "name": "aircraft_skin_processing",
+            "desc": "Flexible job-shop scheduling of aircraft-skin operations on multiple robots/machines.",
+            "math": "problem class: FJSP; jobs J, operations O_{j,s}, machines M",
+            "cp": "# interval vars O[j,s]; machine assignment M_s(O[j,s])"
+          },
+          {
+            "name": "minimize_makespan",
+            "desc": "Minimize the maximum completion time.",
+            "math": "min  max_{j,s} endOf(O_{j,s})",
+            "cp": "mdl.add(mdl.minimize(mdl.max([mdl.end_of(O[j,s]) for j,s in ops])))"
+          },
+          {
+            "name": "non_preemption",
+            "desc": "Operations are atomic interval activities (no preemption).",
+            "math": "O_{j,s} is a non-preemptive interval of fixed length",
+            "cp": "O[j,s] = mdl.interval_var(size=p[j,s])  # atomic"
+          },
+          {
+            "name": "operation_precedence",
+            "desc": "Operations of a job run in their predefined order.",
+            "math": "endBeforeStart(O_{j,s-1}, O_{j,s})",
+            "cp": "mdl.add(mdl.end_before_start(O[j,s-1], O[j,s]))"
+          },
+          {
+            "name": "resource_capacity_no_overlap",
+            "desc": "A machine processes at most one operation at a time.",
+            "math": "noOverlap({ O_{j,s} | M_s(O_{j,s}) = m })",
+            "cp": "mdl.add(mdl.no_overlap([C[j,s,m] for (j,s) on m]))"
+          },
+          {
+            "name": "resource_flexibility",
+            "desc": "Each operation is assigned to one of its eligible machines.",
+            "math": "alternative(O_{j,s}, [C_{j,s,k}]_k)",
+            "cp": "mdl.add(mdl.alternative(O[j,s], [C[j,s,k] for k]))"
+          }
+        ],
+        "matched_domain": "Aircraft Skin Processing",
+        "base_template": "from docplex.cp.model import CpoModel\nimport os\n\nfilename = os.path.dirname(os.path.abspath(__file__)) + \"/data/fjsp_location_newdataset_1.fjs\"\nwith open(filename, \"r\") as file:\n    NB_JOBS, NB_MACHINES = [int(v) for v in file.readline().split()]\n    list_jobs = [[v if v in ['tight', 'loose', 'none'] else int(v) for v in file.readline().split()] for i in\n                 range(NB_JOBS)]\n\nJOBS = []\nCONSTRAINTS = []  \n\nfor jline in list_jobs:\n    nbstps = jline.pop(0)\n    job = []\n    constraints = []\n    for stp in range(nbstps):\n        nbc = jline.pop(0)\n        choices = []\n        for c in range(nbc):\n            m = jline.pop(0)\n            d = jline.pop(0)\n            choices.append((m - 1, d))\n        constraint = jline.pop(0) \n        job.append(choices)\n        constraints.append(constraint)\n    JOBS.append(job)\n    CONSTRAINTS.append(constraints)\n\nmdl = CpoModel()\n\njob_number = {}\nall_operations = [] \nmachine_operations = [[] for m in range(NB_MACHINES)] \njob_operations = []  \n\nfor jx, job in enumerate(JOBS):    \n    op_vars = []\n    for ox, op in enumerate(job):       \n        choice_vars = []\n        for cx, (m, d) in enumerate(op):    \n            cv = mdl.interval_var(name=\"J{}_O{}_C{}_M{}\".format(jx, ox, cx, m), optional=True, size=d)\n            job_number[cv.get_name()] = jx\n            choice_vars.append(cv)\n            machine_operations[m].append(cv)\n\n        jv = mdl.interval_var(name=\"J{}_O{}\".format(jx, ox))\n        mdl.add(mdl.alternative(jv, choice_vars))\n        op_vars.append(jv)\n\n        if ox > 0:\n            mdl.add(mdl.end_before_start(op_vars[ox - 1], op_vars[ox]))\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'tight':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) <= 15)\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'loose':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) >= 30)\n    all_operations.extend(op_vars)\n    job_operations.append(op_vars)  \n\nfor lops in machine_operations:\n    mdl.add(mdl.no_overlap(lops))\n\nmdl.add(mdl.minimize(mdl.max([mdl.end_of(op) for op in all_operations])))\n\nprint(\"Solving model....\")\nmsol = mdl.solve(TimeLimit=30)\n\nif msol:\n    print(\"Solution found.\")\n    print(\"Objective value (Makespan):\", msol.get_objective_value())\n\n    print(\"=== Machine Schedules ===\")\n    for m in range(NB_MACHINES):\n        print(f\"\\nMachine M{m}:\")\n        machine_schedule = []\n        for v in machine_operations[m]:\n            itv = msol.get_var_solution(v)\n            if itv.is_present():\n                jn = job_number[v.get_name()]\n                machine_schedule.append((itv.start, itv.end, f\"J{jn}\"))\n        machine_schedule.sort(key=lambda x: x[0])\n        for s, e, jn in machine_schedule:\n            print(f\"  {jn:<5} Start: {s:<5}  End: {e:<5}  Duration: {e - s}\")\nelse:\n    print(\"No solution found.\")",
+        "_rag_concepts": [
+          {
+            "problem_type": "Aircraft Skin Processing",
+            "constraints": [
+              "aircraft_skin_processing",
+              "minimize_makespan",
+              "non_preemption",
+              "operation_precedence",
+              "resource_capacity_no_overlap",
+              "resource_flexibility"
+            ],
+            "example_ids": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ]
+          },
+          {
+            "problem_type": "Aircraft Skin Processing",
+            "constraints": [
+              "aircraft_skin_processing",
+              "minimize_makespan",
+              "non_preemption",
+              "operation_precedence",
+              "resource_capacity_no_overlap",
+              "resource_flexibility",
+              "sequence_dependent_setup"
+            ],
+            "example_ids": [
+              "7",
+              "12",
+              "16",
+              "19",
+              "21"
+            ]
+          },
+          {
+            "problem_type": "Aircraft Skin Processing",
+            "constraints": [
+              "aircraft_skin_processing",
+              "minimize_makespan",
+              "non_preemption",
+              "operation_level_precedence",
+              "operation_precedence",
+              "resource_capacity_no_overlap",
+              "resource_flexibility"
+            ],
+            "example_ids": [
+              "5",
+              "10",
+              "14",
+              "17",
+              "20"
+            ]
+          }
+        ]
+      }
+    },
+    "stage2_math_model": {
+      "status": "success",
+      "output": {
+        "model_title": "Aircraft Skin Processing",
+        "model_type": "optimization",
+        "complexity_note": "NP-hard FJSP with machine assignment, precedence, and temporal constraints.",
+        "parameters_section": [
+          {
+            "symbol": "NB_JOBS",
+            "description": "Number of jobs.",
+            "type": "scalar"
+          },
+          {
+            "symbol": "NB_MACHINES",
+            "description": "Number of machines.",
+            "type": "scalar"
+          },
+          {
+            "symbol": "A[j][o]",
+            "description": "Set of (machine,duration) choices for op o of job j.",
+            "type": "set"
+          },
+          {
+            "symbol": "tight/loose",
+            "description": "Temporal constraint type between consecutive ops.",
+            "type": "scalar"
+          }
+        ],
+        "variables_section": [
+          {
+            "symbol": "x[j][o]",
+            "description": "Master interval variable for operation o of job j.",
+            "domain_or_size": "non-negative",
+            "var_type": "interval_var"
+          },
+          {
+            "symbol": "x[j][o][m]",
+            "description": "Optional interval for op o of job j on machine m with processing time d.",
+            "domain_or_size": "size=d, optional=True",
+            "var_type": "interval_var (optional)"
+          }
+        ],
+        "constraints_section": [
+          {
+            "id": "C1",
+            "name": "Alternative Machine Assignment",
+            "math_expression": "alternative(x[j][o], [x[j][o][m] : m in A[j][o]])  forall j,o",
+            "description": "Exactly one candidate machine selected per operation."
+          },
+          {
+            "id": "C2",
+            "name": "Operation Precedence",
+            "math_expression": "endBeforeStart(x[j][o], x[j][o+1])  forall j, o < last",
+            "description": "Operations within a job execute in order."
+          },
+          {
+            "id": "C3",
+            "name": "Machine No-Overlap",
+            "math_expression": "noOverlap([x[j][o][m] : all j,o using machine m])  forall m",
+            "description": "Each machine processes at most one operation at a time."
+          },
+          {
+            "id": "C4",
+            "name": "Tight Temporal Constraint",
+            "math_expression": "startOf(x[j][o+1]) - endOf(x[j][o]) <= 15  if CONSTRAINTS[j][o]='tight'",
+            "description": "Inter-operation gap at most 15 time units for tight constraint."
+          },
+          {
+            "id": "C5",
+            "name": "Loose Temporal Constraint",
+            "math_expression": "startOf(x[j][o+1]) - endOf(x[j][o]) >= 30  if CONSTRAINTS[j][o]='loose'",
+            "description": "Inter-operation gap at least 30 time units for loose constraint."
+          }
+        ],
+        "objective_section": {
+          "direction": "minimize",
+          "math_expression": "minimize(max([endOf(x[j][o]) : all j,o]))",
+          "description": "Minimize makespan — maximum completion time across all operations."
+        }
+      }
+    },
+    "stage3_cp_code": {
+      "status": "success",
+      "final_code": "from docplex.cp.model import CpoModel\nimport os\n\nfilename = os.path.dirname(os.path.abspath(__file__)) + \"/data/fjsp_location_newdataset_1.fjs\"\nwith open(filename, \"r\") as file:\n    NB_JOBS, NB_MACHINES = [int(v) for v in file.readline().split()]\n    list_jobs = [[v if v in ['tight', 'loose', 'none'] else int(v) for v in file.readline().split()] for i in\n                 range(NB_JOBS)]\n\nJOBS = []\nCONSTRAINTS = []  \n\nfor jline in list_jobs:\n    nbstps = jline.pop(0)\n    job = []\n    constraints = []\n    for stp in range(nbstps):\n        nbc = jline.pop(0)\n        choices = []\n        for c in range(nbc):\n            m = jline.pop(0)\n            d = jline.pop(0)\n            choices.append((m - 1, d))\n        constraint = jline.pop(0) \n        job.append(choices)\n        constraints.append(constraint)\n    JOBS.append(job)\n    CONSTRAINTS.append(constraints)\n\nmdl = CpoModel()\njob_number = {}\nall_operations = []\nmachine_operations = [[] for m in range(NB_MACHINES)]\njob_operations = []\n\nfor jx, job in enumerate(JOBS):\n    op_vars = []\n    for ox, op in enumerate(job):\n        choice_vars = []\n        for cx, (m, d) in enumerate(op):\n            cv = mdl.interval_var(name=\"J{}_O{}_C{}_M{}\".format(jx, ox, cx, m),\n                                  optional=True, size=d)\n            job_number[cv.get_name()] = jx\n            choice_vars.append(cv)\n            machine_operations[m].append(cv)\n        jv = mdl.interval_var(name=\"J{}_O{}\".format(jx, ox))\n        mdl.add(mdl.alternative(jv, choice_vars))\n        op_vars.append(jv)\n        if ox > 0:\n            mdl.add(mdl.end_before_start(op_vars[ox - 1], op_vars[ox]))\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'tight':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) <= 15)\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'loose':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) >= 30)\n\n    all_operations.extend(op_vars)\n    job_operations.append(op_vars)\n\n\nfor lops in machine_operations:\n    mdl.add(mdl.no_overlap(lops))\nmdl.add(mdl.minimize(mdl.max([mdl.end_of(op) for op in all_operations])))\n\nprint(\"Solving model....\")\nmsol = mdl.solve(TimeLimit=30)\nif msol:\n    print(\"Solution found.\")\n    print(\"Objective value (Makespan):\", msol.get_objective_value())\n    print(\"=== Machine Schedules ===\")\n    for m in range(NB_MACHINES):\n        print(f\"\\nMachine M{m}:\")\n        machine_schedule = []\n        for v in machine_operations[m]:\n            itv = msol.get_var_solution(v)\n            if itv.is_present():\n                jn = job_number[v.get_name()]\n                machine_schedule.append((itv.start, itv.end, f\"J{jn}\"))\n        machine_schedule.sort(key=lambda x: x[0])\n        for s, e, jn in machine_schedule:\n            print(f\"  {jn:<5} Start: {s:<5}  End: {e:<5}  Duration: {e-s}\")\nelse:\n    print(\"No solution found.\")",
+      "validation_report": {
+        "syntax_ok": true,
+        "static_ok": true,
+        "llm_result": {},
+        "all_errors": [],
+        "all_suggestions": [],
+        "advisory_notes": [],
+        "overall_valid": true,
+        "score": 0.932,
+        "code_quality": {
+          "syntax_ok": true,
+          "keyword_match": 0.5263,
+          "ast_structure": 1.0,
+          "ngram_overlap": 0.0096,
+          "code_quality_score": 0.6598
+        },
+        "paradigm_ok": true,
+        "constraint_coverage": {
+          "n_formal": 5,
+          "n_math": 5,
+          "n_code_add": 5,
+          "missing_formal_in_math": 0,
+          "math_ops_missing_in_code": [],
+          "missing_global_ops": [],
+          "coverage_ratio": 1.0,
+          "coverage_ok": true
+        },
+        "coverage_ok": true,
+        "numeric_consistency": {
+          "formal_numbers": [
+            "1",
+            "15",
+            "30"
+          ],
+          "math_numbers": [
+            "15",
+            "30"
+          ],
+          "salient_numbers": [
+            "15",
+            "30"
+          ],
+          "missing_in_code": [],
+          "possible_scale_changes": [],
+          "consistency_ok": true
+        },
+        "numeric_ok": true,
+        "semantic_ok": null,
+        "mapping_ok": true,
+        "dynamic_ok": true,
+        "dynamic_result": {
+          "kind": "solved",
+          "dynamic_ok": true,
+          "status": "solved",
+          "objective": 546.0,
+          "error": ""
+        }
+      },
+      "iteration_history": [
+        {
+          "round": 1,
+          "backend": "code_generation",
+          "code_lines": 82,
+          "n_code_add": 5,
+          "regressed": false,
+          "score": 0.932,
+          "syntax_ok": true,
+          "static_ok": true,
+          "dynamic_ok": true,
+          "solver_status": "solved",
+          "objective": 546.0,
+          "llm_valid": false,
+          "code_quality": {
+            "syntax_ok": true,
+            "keyword_match": 0.5263,
+            "ast_structure": 1.0,
+            "ngram_overlap": 0.0096,
+            "code_quality_score": 0.6598
+          },
+          "errors": [],
+          "suggestions": []
+        }
+      ]
+    }
+  },
+  "final_output": {
+    "problem_type": "Aircraft Skin Processing",
+    "problem_summary": "Flexible job shop scheduling for aircraft skin components. Each job consists of ordered operations, each assignable to candidate machines with given processing times. Minimize makespan.",
+    "cp_natural_language": "This problem arises from aircraft manufacturing where multiple skin components need to be processed through a series of operations. In the flexible job shop scheduling environment, each job (representing an aircraft skin component) must be processed according to a predefined sequence of operations. Each operation can be performed on multiple candidate machines with different processing times, providing flexibility in machine selection. However, each machine can process only one operation at a time, ensuring no resource conflicts. The system automatically handles temporal constraints between consecutive operations: tight constraints require intervals of 15 time units or less, while loose constraints require intervals of 30 time units or more. The objective is to minimize the makespan, which represents the maximum completion time across all jobs, thus optimizing the overall production efficiency. Write a Python program using the docplex.cp module (IBM CP Optimizer) to solve this flexible job shop scheduling problem. The input data should be read from a file named \"fjsp_location_newdataset_1.fjs\" located in the data subdirectory. The file format is as follows: the first line contains the number of jobs and machines; subsequent lines contain job information with the number of operations, and for each operation, the number of candidate machines followed by machine-duration pairs, and temporal constraint types ('tight', 'loose', or 'none').",
+    "cp_formal_language": "1. Decision Variables\nx[j][o] []: Master interval variable for operation o of job j.\nx[j][o][m] []: Optional interval for op o of job j on machine m with processing time d.\n\n2. Parameters and Input Data\nNB_JOBS: Number of jobs.\nNB_MACHINES: Number of machines.\nA[j][o]: Set of (machine,duration) choices for op o of job j.\ntight/loose: Temporal constraint type between consecutive ops.\n\n3. Constraints\n[C1] Alternative Machine Assignment: alternative(x[j][o], [x[j][o][m] : m in A[j][o]])  forall j,o\n  Note: Exactly one candidate machine selected per operation.\n[C2] Operation Precedence: endBeforeStart(x[j][o], x[j][o+1])  forall j, o < last\n  Note: Operations within a job execute in order.\n[C3] Machine No-Overlap: noOverlap([x[j][o][m] : all j,o using machine m])  forall m\n  Note: Each machine processes at most one operation at a time.\n[C4] Tight Temporal Constraint: startOf(x[j][o+1]) - endOf(x[j][o]) <= 15  if CONSTRAINTS[j][o]='tight'\n  Note: Inter-operation gap at most 15 time units for tight constraint.\n[C5] Loose Temporal Constraint: startOf(x[j][o+1]) - endOf(x[j][o]) >= 30  if CONSTRAINTS[j][o]='loose'\n  Note: Inter-operation gap at least 30 time units for loose constraint.\n\n4. Objective Function\nMINIMIZE minimize(max([endOf(x[j][o]) : all j,o]))\nNote: Minimize makespan — maximum completion time across all operations.\n\n5. Data Specification\nNB_JOBS: Number of jobs. (input file fjsp_location_newdataset_1.fjs)\nNB_MACHINES: Number of machines. (input file)\nJOBS: Nested list: job→operation→[(machine,duration)]. (input file)\nCONSTRAINTS: Per-operation temporal constraint type: tight/loose/none. (input file)",
+    "math_model": {
+      "model_title": "Aircraft Skin Processing",
+      "model_type": "optimization",
+      "complexity_note": "NP-hard FJSP with machine assignment, precedence, and temporal constraints.",
+      "parameters_section": [
+        {
+          "symbol": "NB_JOBS",
+          "description": "Number of jobs.",
+          "type": "scalar"
+        },
+        {
+          "symbol": "NB_MACHINES",
+          "description": "Number of machines.",
+          "type": "scalar"
+        },
+        {
+          "symbol": "A[j][o]",
+          "description": "Set of (machine,duration) choices for op o of job j.",
+          "type": "set"
+        },
+        {
+          "symbol": "tight/loose",
+          "description": "Temporal constraint type between consecutive ops.",
+          "type": "scalar"
+        }
+      ],
+      "variables_section": [
+        {
+          "symbol": "x[j][o]",
+          "description": "Master interval variable for operation o of job j.",
+          "domain_or_size": "non-negative",
+          "var_type": "interval_var"
+        },
+        {
+          "symbol": "x[j][o][m]",
+          "description": "Optional interval for op o of job j on machine m with processing time d.",
+          "domain_or_size": "size=d, optional=True",
+          "var_type": "interval_var (optional)"
+        }
+      ],
+      "constraints_section": [
+        {
+          "id": "C1",
+          "name": "Alternative Machine Assignment",
+          "math_expression": "alternative(x[j][o], [x[j][o][m] : m in A[j][o]])  forall j,o",
+          "description": "Exactly one candidate machine selected per operation."
+        },
+        {
+          "id": "C2",
+          "name": "Operation Precedence",
+          "math_expression": "endBeforeStart(x[j][o], x[j][o+1])  forall j, o < last",
+          "description": "Operations within a job execute in order."
+        },
+        {
+          "id": "C3",
+          "name": "Machine No-Overlap",
+          "math_expression": "noOverlap([x[j][o][m] : all j,o using machine m])  forall m",
+          "description": "Each machine processes at most one operation at a time."
+        },
+        {
+          "id": "C4",
+          "name": "Tight Temporal Constraint",
+          "math_expression": "startOf(x[j][o+1]) - endOf(x[j][o]) <= 15  if CONSTRAINTS[j][o]='tight'",
+          "description": "Inter-operation gap at most 15 time units for tight constraint."
+        },
+        {
+          "id": "C5",
+          "name": "Loose Temporal Constraint",
+          "math_expression": "startOf(x[j][o+1]) - endOf(x[j][o]) >= 30  if CONSTRAINTS[j][o]='loose'",
+          "description": "Inter-operation gap at least 30 time units for loose constraint."
+        }
+      ],
+      "objective_section": {
+        "direction": "minimize",
+        "math_expression": "minimize(max([endOf(x[j][o]) : all j,o]))",
+        "description": "Minimize makespan — maximum completion time across all operations."
+      }
+    },
+    "cp_code": "from docplex.cp.model import CpoModel\nimport os\n\nfilename = os.path.dirname(os.path.abspath(__file__)) + \"/data/fjsp_location_newdataset_1.fjs\"\nwith open(filename, \"r\") as file:\n    NB_JOBS, NB_MACHINES = [int(v) for v in file.readline().split()]\n    list_jobs = [[v if v in ['tight', 'loose', 'none'] else int(v) for v in file.readline().split()] for i in\n                 range(NB_JOBS)]\n\nJOBS = []\nCONSTRAINTS = []  \n\nfor jline in list_jobs:\n    nbstps = jline.pop(0)\n    job = []\n    constraints = []\n    for stp in range(nbstps):\n        nbc = jline.pop(0)\n        choices = []\n        for c in range(nbc):\n            m = jline.pop(0)\n            d = jline.pop(0)\n            choices.append((m - 1, d))\n        constraint = jline.pop(0) \n        job.append(choices)\n        constraints.append(constraint)\n    JOBS.append(job)\n    CONSTRAINTS.append(constraints)\n\nmdl = CpoModel()\njob_number = {}\nall_operations = []\nmachine_operations = [[] for m in range(NB_MACHINES)]\njob_operations = []\n\nfor jx, job in enumerate(JOBS):\n    op_vars = []\n    for ox, op in enumerate(job):\n        choice_vars = []\n        for cx, (m, d) in enumerate(op):\n            cv = mdl.interval_var(name=\"J{}_O{}_C{}_M{}\".format(jx, ox, cx, m),\n                                  optional=True, size=d)\n            job_number[cv.get_name()] = jx\n            choice_vars.append(cv)\n            machine_operations[m].append(cv)\n        jv = mdl.interval_var(name=\"J{}_O{}\".format(jx, ox))\n        mdl.add(mdl.alternative(jv, choice_vars))\n        op_vars.append(jv)\n        if ox > 0:\n            mdl.add(mdl.end_before_start(op_vars[ox - 1], op_vars[ox]))\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'tight':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) <= 15)\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'loose':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) >= 30)\n\n    all_operations.extend(op_vars)\n    job_operations.append(op_vars)\n\n\nfor lops in machine_operations:\n    mdl.add(mdl.no_overlap(lops))\nmdl.add(mdl.minimize(mdl.max([mdl.end_of(op) for op in all_operations])))\n\nprint(\"Solving model....\")\nmsol = mdl.solve(TimeLimit=30)\nif msol:\n    print(\"Solution found.\")\n    print(\"Objective value (Makespan):\", msol.get_objective_value())\n    print(\"=== Machine Schedules ===\")\n    for m in range(NB_MACHINES):\n        print(f\"\\nMachine M{m}:\")\n        machine_schedule = []\n        for v in machine_operations[m]:\n            itv = msol.get_var_solution(v)\n            if itv.is_present():\n                jn = job_number[v.get_name()]\n                machine_schedule.append((itv.start, itv.end, f\"J{jn}\"))\n        machine_schedule.sort(key=lambda x: x[0])\n        for s, e, jn in machine_schedule:\n            print(f\"  {jn:<5} Start: {s:<5}  End: {e:<5}  Duration: {e-s}\")\nelse:\n    print(\"No solution found.\")",
+    "validation_score": 0.932,
+    "constraint_label": "1,4",
+    "_structured": {
+      "problem_type": "Aircraft Skin Processing",
+      "problem_summary": "Flexible job shop scheduling for aircraft skin components. Each job consists of ordered operations, each assignable to candidate machines with given processing times. Minimize makespan.",
+      "decision_variables": [
+        {
+          "name": "x[j][o]",
+          "type": "interval_var",
+          "description": "Master interval variable for operation o of job j.",
+          "domain": "non-negative"
+        },
+        {
+          "name": "x[j][o][m]",
+          "type": "interval_var (optional)",
+          "description": "Optional interval variable for operation o of job j on machine m.",
+          "domain": "size=p[j][o][m], optional=True"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "NB_JOBS",
+          "description": "Number of jobs.",
+          "value_or_source": "input file fjsp_location_newdataset_1.fjs"
+        },
+        {
+          "name": "NB_MACHINES",
+          "description": "Number of machines.",
+          "value_or_source": "input file"
+        },
+        {
+          "name": "JOBS",
+          "description": "Nested list: job→operation→[(machine,duration)].",
+          "value_or_source": "input file"
+        },
+        {
+          "name": "CONSTRAINTS",
+          "description": "Per-operation temporal constraint type: tight/loose/none.",
+          "value_or_source": "input file"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C1",
+          "type": "alternative",
+          "description": "Each operation is executed on exactly one machine."
+        },
+        {
+          "id": "C2",
+          "type": "precedence",
+          "description": "Operations within a job execute in sequence."
+        },
+        {
+          "id": "C3",
+          "type": "no_overlap",
+          "description": "Each machine executes at most one operation at a time."
+        },
+        {
+          "id": "C4",
+          "type": "time_window",
+          "description": "Tight constraint: gap between consecutive ops <= 15."
+        },
+        {
+          "id": "C5",
+          "type": "time_window",
+          "description": "Loose constraint: gap between consecutive ops >= 30."
+        }
+      ],
+      "objective": {
+        "direction": "minimize",
+        "expression": "minimize(max([endOf(x[j][o]) for all j,o]))",
+        "description": "Minimize makespan."
+      },
+      "implicit_constraints": [
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility",
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "sequence_dependent_setup"
+      ],
+      "certain_implicit": [
+        "non_preemption",
+        "operation_precedence",
+        "resource_capacity_no_overlap",
+        "resource_flexibility"
+      ],
+      "possible_implicit": [
+        "inter_job_precedence",
+        "job_start_time_window",
+        "job_temporal_bounds",
+        "operation_end_time_window",
+        "operation_level_precedence",
+        "sequence_dependent_setup"
+      ],
+      "formal_templates": [
+        {
+          "name": "aircraft_skin_processing",
+          "desc": "Flexible job-shop scheduling of aircraft-skin operations on multiple robots/machines.",
+          "math": "problem class: FJSP; jobs J, operations O_{j,s}, machines M",
+          "cp": "# interval vars O[j,s]; machine assignment M_s(O[j,s])"
+        },
+        {
+          "name": "minimize_makespan",
+          "desc": "Minimize the maximum completion time.",
+          "math": "min  max_{j,s} endOf(O_{j,s})",
+          "cp": "mdl.add(mdl.minimize(mdl.max([mdl.end_of(O[j,s]) for j,s in ops])))"
+        },
+        {
+          "name": "non_preemption",
+          "desc": "Operations are atomic interval activities (no preemption).",
+          "math": "O_{j,s} is a non-preemptive interval of fixed length",
+          "cp": "O[j,s] = mdl.interval_var(size=p[j,s])  # atomic"
+        },
+        {
+          "name": "operation_precedence",
+          "desc": "Operations of a job run in their predefined order.",
+          "math": "endBeforeStart(O_{j,s-1}, O_{j,s})",
+          "cp": "mdl.add(mdl.end_before_start(O[j,s-1], O[j,s]))"
+        },
+        {
+          "name": "resource_capacity_no_overlap",
+          "desc": "A machine processes at most one operation at a time.",
+          "math": "noOverlap({ O_{j,s} | M_s(O_{j,s}) = m })",
+          "cp": "mdl.add(mdl.no_overlap([C[j,s,m] for (j,s) on m]))"
+        },
+        {
+          "name": "resource_flexibility",
+          "desc": "Each operation is assigned to one of its eligible machines.",
+          "math": "alternative(O_{j,s}, [C_{j,s,k}]_k)",
+          "cp": "mdl.add(mdl.alternative(O[j,s], [C[j,s,k] for k]))"
+        }
+      ],
+      "matched_domain": "Aircraft Skin Processing",
+      "base_template": "from docplex.cp.model import CpoModel\nimport os\n\nfilename = os.path.dirname(os.path.abspath(__file__)) + \"/data/fjsp_location_newdataset_1.fjs\"\nwith open(filename, \"r\") as file:\n    NB_JOBS, NB_MACHINES = [int(v) for v in file.readline().split()]\n    list_jobs = [[v if v in ['tight', 'loose', 'none'] else int(v) for v in file.readline().split()] for i in\n                 range(NB_JOBS)]\n\nJOBS = []\nCONSTRAINTS = []  \n\nfor jline in list_jobs:\n    nbstps = jline.pop(0)\n    job = []\n    constraints = []\n    for stp in range(nbstps):\n        nbc = jline.pop(0)\n        choices = []\n        for c in range(nbc):\n            m = jline.pop(0)\n            d = jline.pop(0)\n            choices.append((m - 1, d))\n        constraint = jline.pop(0) \n        job.append(choices)\n        constraints.append(constraint)\n    JOBS.append(job)\n    CONSTRAINTS.append(constraints)\n\nmdl = CpoModel()\n\njob_number = {}\nall_operations = [] \nmachine_operations = [[] for m in range(NB_MACHINES)] \njob_operations = []  \n\nfor jx, job in enumerate(JOBS):    \n    op_vars = []\n    for ox, op in enumerate(job):       \n        choice_vars = []\n        for cx, (m, d) in enumerate(op):    \n            cv = mdl.interval_var(name=\"J{}_O{}_C{}_M{}\".format(jx, ox, cx, m), optional=True, size=d)\n            job_number[cv.get_name()] = jx\n            choice_vars.append(cv)\n            machine_operations[m].append(cv)\n\n        jv = mdl.interval_var(name=\"J{}_O{}\".format(jx, ox))\n        mdl.add(mdl.alternative(jv, choice_vars))\n        op_vars.append(jv)\n\n        if ox > 0:\n            mdl.add(mdl.end_before_start(op_vars[ox - 1], op_vars[ox]))\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'tight':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) <= 15)\n        if ox > 0 and CONSTRAINTS[jx][ox - 1] == 'loose':\n            mdl.add(mdl.start_of(op_vars[ox]) - mdl.end_of(op_vars[ox - 1]) >= 30)\n    all_operations.extend(op_vars)\n    job_operations.append(op_vars)  \n\nfor lops in machine_operations:\n    mdl.add(mdl.no_overlap(lops))\n\nmdl.add(mdl.minimize(mdl.max([mdl.end_of(op) for op in all_operations])))\n\nprint(\"Solving model....\")\nmsol = mdl.solve(TimeLimit=30)\n\nif msol:\n    print(\"Solution found.\")\n    print(\"Objective value (Makespan):\", msol.get_objective_value())\n\n    print(\"=== Machine Schedules ===\")\n    for m in range(NB_MACHINES):\n        print(f\"\\nMachine M{m}:\")\n        machine_schedule = []\n        for v in machine_operations[m]:\n            itv = msol.get_var_solution(v)\n            if itv.is_present():\n                jn = job_number[v.get_name()]\n                machine_schedule.append((itv.start, itv.end, f\"J{jn}\"))\n        machine_schedule.sort(key=lambda x: x[0])\n        for s, e, jn in machine_schedule:\n            print(f\"  {jn:<5} Start: {s:<5}  End: {e:<5}  Duration: {e - s}\")\nelse:\n    print(\"No solution found.\")",
+      "_rag_concepts": [
+        {
+          "problem_type": "Aircraft Skin Processing",
+          "constraints": [
+            "aircraft_skin_processing",
+            "minimize_makespan",
+            "non_preemption",
+            "operation_precedence",
+            "resource_capacity_no_overlap",
+            "resource_flexibility"
+          ],
+          "example_ids": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        },
+        {
+          "problem_type": "Aircraft Skin Processing",
+          "constraints": [
+            "aircraft_skin_processing",
+            "minimize_makespan",
+            "non_preemption",
+            "operation_precedence",
+            "resource_capacity_no_overlap",
+            "resource_flexibility",
+            "sequence_dependent_setup"
+          ],
+          "example_ids": [
+            "7",
+            "12",
+            "16",
+            "19",
+            "21"
+          ]
+        },
+        {
+          "problem_type": "Aircraft Skin Processing",
+          "constraints": [
+            "aircraft_skin_processing",
+            "minimize_makespan",
+            "non_preemption",
+            "operation_level_precedence",
+            "operation_precedence",
+            "resource_capacity_no_overlap",
+            "resource_flexibility"
+          ],
+          "example_ids": [
+            "5",
+            "10",
+            "14",
+            "17",
+            "20"
+          ]
+        }
+      ]
+    }
+  },
+  "dynamic_updates": [],
+  "metadata": {
+    "total_time_seconds": 182.7,
+    "kb_updated": false,
+    "validation_passed": true,
+    "iteration_rounds": 1
+  }
+}

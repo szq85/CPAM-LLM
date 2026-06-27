@@ -1,0 +1,387 @@
+{
+  "Aircraft Skin Processing": {
+    "problem_type": "Aircraft Skin Processing",
+    "problem_summary": "Flexible job shop scheduling for aircraft skin components. Each job consists of ordered operations, each assignable to candidate machines with given processing times. Minimize makespan.",
+    "decision_variables": [
+      {
+        "name": "x[j][o]",
+        "type": "interval_var",
+        "description": "Master interval variable for operation o of job j.",
+        "domain": "non-negative"
+      },
+      {
+        "name": "x[j][o][m]",
+        "type": "interval_var (optional)",
+        "description": "Optional interval variable for operation o of job j on machine m.",
+        "domain": "size=p[j][o][m], optional=True"
+      }
+    ],
+    "parameters": [
+      {
+        "name": "NB_JOBS",
+        "description": "Number of jobs.",
+        "value_or_source": "input file fjsp_location_newdataset_1.fjs"
+      },
+      {
+        "name": "NB_MACHINES",
+        "description": "Number of machines.",
+        "value_or_source": "input file"
+      },
+      {
+        "name": "JOBS",
+        "description": "Nested list: job→operation→[(machine,duration)].",
+        "value_or_source": "input file"
+      },
+      {
+        "name": "CONSTRAINTS",
+        "description": "Per-operation temporal constraint type: tight/loose/none.",
+        "value_or_source": "input file"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "C1",
+        "type": "alternative",
+        "description": "Each operation is executed on exactly one machine."
+      },
+      {
+        "id": "C2",
+        "type": "precedence",
+        "description": "Operations within a job execute in sequence."
+      },
+      {
+        "id": "C3",
+        "type": "no_overlap",
+        "description": "Each machine executes at most one operation at a time."
+      },
+      {
+        "id": "C4",
+        "type": "time_window",
+        "description": "Tight constraint: gap between consecutive ops <= 15."
+      },
+      {
+        "id": "C5",
+        "type": "time_window",
+        "description": "Loose constraint: gap between consecutive ops >= 30."
+      }
+    ],
+    "objective": {
+      "direction": "minimize",
+      "expression": "minimize(max([endOf(x[j][o]) for all j,o]))",
+      "description": "Minimize makespan."
+    }
+  },
+  "Battery Pack Design": {
+    "problem_type": "Battery Pack Design",
+    "problem_summary": "Select which battery modules to activate each period to satisfy load current and voltage constraints while minimizing total energy loss (C+R cost).",
+    "decision_variables": [
+      {
+        "name": "s[k][i][j]",
+        "type": "binary_var",
+        "description": "1 if module (i,j) active in period k.",
+        "domain": "{0,1}"
+      },
+      {
+        "name": "p[k]",
+        "type": "integer_var",
+        "description": "Number of active modules per column in period k.",
+        "domain": "[1, NUM_PARALLEL_MODULES]"
+      }
+    ],
+    "parameters": [
+      {
+        "name": "NUM_PARALLEL_MODULES",
+        "description": "Rows of modules.",
+        "value_or_source": "battery_data.txt"
+      },
+      {
+        "name": "NUM_SERIES_COLUMNS",
+        "description": "Columns of modules.",
+        "value_or_source": "battery_data.txt"
+      },
+      {
+        "name": "NUM_PERIODS",
+        "description": "Time periods.",
+        "value_or_source": "battery_data.txt"
+      },
+      {
+        "name": "C[k][i][j]",
+        "description": "Capacity cost per module.",
+        "value_or_source": "battery_data.txt"
+      },
+      {
+        "name": "R[k][i][j]",
+        "description": "Resistance cost per module.",
+        "value_or_source": "battery_data.txt"
+      },
+      {
+        "name": "V[k][i][j]",
+        "description": "Voltage per module.",
+        "value_or_source": "battery_data.txt"
+      },
+      {
+        "name": "CELL_NOMINAL_VOLTAGE",
+        "description": "Nominal voltage per cell used to derive voltage bounds.",
+        "value_or_source": "battery_data.txt"
+      },
+      {
+        "name": "V_lower[k]",
+        "description": "Lower voltage bound: 0.95 * NUM_SERIES_COLUMNS * CELL_NOMINAL_VOLTAGE.",
+        "value_or_source": "computed in code"
+      },
+      {
+        "name": "V_upper[k]",
+        "description": "Upper voltage bound: 1.05 * NUM_SERIES_COLUMNS * CELL_NOMINAL_VOLTAGE.",
+        "value_or_source": "computed in code"
+      },
+      {
+        "name": "I_load[k]",
+        "description": "Required load current.",
+        "value_or_source": "35 A each period"
+      },
+      {
+        "name": "I_MAX_MODULE",
+        "description": "Max current per module.",
+        "value_or_source": "battery_data.txt"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "C1",
+        "type": "parallel_consistency",
+        "description": "Active modules per column equal p[k]."
+      },
+      {
+        "id": "C2",
+        "type": "voltage_lower_bound",
+        "description": "Total active module voltage must be at least 95% of nominal voltage times p[k]."
+      },
+      {
+        "id": "C3",
+        "type": "voltage_upper_bound",
+        "description": "Total active module voltage must be at most 105% of nominal voltage times p[k]."
+      },
+      {
+        "id": "C4",
+        "type": "current_capacity",
+        "description": "Load current satisfied by modules."
+      }
+    ],
+    "objective": {
+      "direction": "minimize",
+      "expression": "minimize(scalProd(s, C+R))",
+      "description": "Minimize total net energy loss (capacity + resistance cost)."
+    }
+  },
+  "Charging Station Location": {
+    "problem_type": "Charging Station Location",
+    "problem_summary": "Assign demand areas to charging stations and select which stations to open, minimizing total fixed + service cost subject to capacity constraints.",
+    "decision_variables": [
+      {
+        "name": "assignment[c]",
+        "type": "integer_var",
+        "description": "Station assigned to demand area c.",
+        "domain": "[0, nbLocations-1]"
+      },
+      {
+        "name": "open_station[p]",
+        "type": "binary_var",
+        "description": "1 if station p is open.",
+        "domain": "{0,1}"
+      },
+      {
+        "name": "load[p]",
+        "type": "integer_var",
+        "description": "Total demand assigned to station p.",
+        "domain": "[0, capacity[p]]"
+      }
+    ],
+    "parameters": [
+      {
+        "name": "nbDemandAreas",
+        "description": "Number of demand areas.",
+        "value_or_source": "30 (base)"
+      },
+      {
+        "name": "nbLocations",
+        "description": "Number of candidate stations.",
+        "value_or_source": "20"
+      },
+      {
+        "name": "cost[c][p]",
+        "description": "Service cost: demand area c to station p.",
+        "value_or_source": "plant_location.data"
+      },
+      {
+        "name": "demand[c]",
+        "description": "Demand of area c.",
+        "value_or_source": "plant_location.data"
+      },
+      {
+        "name": "fixedCost[p]",
+        "description": "Fixed opening cost of station p.",
+        "value_or_source": "plant_location.data"
+      },
+      {
+        "name": "capacity[p]",
+        "description": "Capacity of station p.",
+        "value_or_source": "plant_location.data"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "C1",
+        "type": "activation_load",
+        "description": "Station open iff its load > 0."
+      },
+      {
+        "id": "C2",
+        "type": "pack",
+        "description": "Aggregate demand by assignment."
+      }
+    ],
+    "objective": {
+      "direction": "minimize",
+      "expression": "minimize(scalProd(fixedCost,open_station) + sum(element(assignment[c],cost[c])))",
+      "description": "Minimize total fixed + service cost."
+    }
+  },
+  "DNA Sequence Design": {
+    "problem_type": "DNA Sequence Design",
+    "problem_summary": "Design 6 DNA sequences of length 8 satisfying GC-content, pairwise Hamming distance, and reverse-complement distance constraints. Feasibility problem.",
+    "decision_variables": [
+      {
+        "name": "words[i][j]",
+        "type": "integer_var",
+        "description": "Nucleotide at position j of sequence i (0=A,1=T,2=C,3=G).",
+        "domain": "[0,3]"
+      }
+    ],
+    "parameters": [
+      {
+        "name": "n_words",
+        "description": "Number of sequences.",
+        "value_or_source": "6"
+      },
+      {
+        "name": "word_length",
+        "description": "Length of each sequence.",
+        "value_or_source": "8"
+      },
+      {
+        "name": "word_list",
+        "description": "Valid 8-mer combinations.",
+        "value_or_source": "data/word.txt"
+      },
+      {
+        "name": "complement_map",
+        "description": "Base complement: A↔T, C↔G.",
+        "value_or_source": "[1,0,3,2]"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "C1",
+        "type": "allowed_assignments",
+        "description": "Each sequence must come from the valid word list."
+      },
+      {
+        "id": "C2",
+        "type": "gc_content",
+        "description": "Exactly 4 G/C bases per sequence (50% GC content)."
+      },
+      {
+        "id": "C3",
+        "type": "hamming_distance",
+        "description": "Pairwise Hamming distance >= 4 between any two sequences."
+      },
+      {
+        "id": "C4",
+        "type": "rev_complement",
+        "description": "Hamming distance >= 4 to reverse complement of any sequence."
+      }
+    ],
+    "objective": {
+      "direction": "feasibility",
+      "expression": "feasibility",
+      "description": "Find any assignment satisfying all constraints."
+    }
+  },
+  "VRP": {
+    "problem_type": "VRP",
+    "problem_summary": "Route a fleet of vehicles from a depot to serve all customers, respecting capacity constraints, minimizing total Euclidean travel distance.",
+    "decision_variables": [
+      {
+        "name": "arc[v][i][j]",
+        "type": "binary_var",
+        "description": "1 if vehicle v travels arc i→j.",
+        "domain": "{0,1}"
+      },
+      {
+        "name": "u[v][i]",
+        "type": "integer_var",
+        "description": "Visit position of node i for vehicle v (subtour elimination).",
+        "domain": "[0, num_locations]"
+      }
+    ],
+    "parameters": [
+      {
+        "name": "num_vehicles",
+        "description": "Number of vehicles.",
+        "value_or_source": "3"
+      },
+      {
+        "name": "vehicle_capacity",
+        "description": "Capacity per vehicle.",
+        "value_or_source": "200"
+      },
+      {
+        "name": "num_locations",
+        "description": "Total nodes including depot.",
+        "value_or_source": "25c101.txt"
+      },
+      {
+        "name": "demands[i]",
+        "description": "Demand at customer i.",
+        "value_or_source": "25c101.txt"
+      },
+      {
+        "name": "distance_matrix",
+        "description": "Euclidean distance matrix.",
+        "value_or_source": "computed from coordinates"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "C1",
+        "type": "service_coverage",
+        "description": "Each customer visited exactly once."
+      },
+      {
+        "id": "C2",
+        "type": "flow_conservation",
+        "description": "Flow in equals flow out at each customer."
+      },
+      {
+        "id": "C3",
+        "type": "depot_constraint",
+        "description": "Each vehicle leaves/returns depot at most once."
+      },
+      {
+        "id": "C4",
+        "type": "capacity",
+        "description": "Vehicle capacity not exceeded."
+      },
+      {
+        "id": "C5",
+        "type": "subtour_elimination",
+        "description": "Miller-Tucker-Zemlin subtour elimination."
+      }
+    ],
+    "objective": {
+      "direction": "minimize",
+      "expression": "minimize(sum(arc[v][i][j]*distance_matrix[i][j]))",
+      "description": "Minimize total travel distance."
+    }
+  }
+}

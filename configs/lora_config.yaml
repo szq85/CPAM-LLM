@@ -1,0 +1,27 @@
+# Two-stage LoRA fine-tuning configuration
+#
+# Must match Supplementary Table 13. The values below are taken from the
+# response letter (R4-8 / R1-4); VERIFY each against Supplementary Table 13
+# before resubmission.
+
+base_model: Qwen2.5-Coder-7B-Instruct
+
+lora:
+  target_modules: all-linear      # "LoRA on all linear layers"
+  # TODO: add rank r, alpha, and dropout from Supplementary Table 13
+  # r: ...
+  # alpha: ...
+  # dropout: ...
+
+training:
+  learning_rate: 1.0e-4
+  lr_scheduler: cosine
+  epochs: 3
+  per_device_batch_size: 1
+  gradient_accumulation_steps: 16
+  precision: fp16
+  max_seq_length: 4096
+
+# Two stages share this configuration:
+#   stage 1: structured description  -> formal CP model
+#   stage 2: formal CP model         -> docplex.cp solver code

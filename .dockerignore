@@ -1,0 +1,36 @@
+.git
+.gitignore
+.dockerignore
+
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+.venv/
+venv/
+env/
+
+.env
+*.key
+*.pem
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.DS_Store
+Thumbs.db
+
+output/*
+!output/.gitkeep
+
+# Fine-tuned model weights are served by external model servers, not baked into
+# this lightweight web/runtime image.
+models/**/*.safetensors
+models/**/*.bin
+models/base/
+
+# Training archives are not needed to run the pipeline or web service.
+data/train/*.zip
