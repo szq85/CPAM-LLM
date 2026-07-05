@@ -1,27 +1,55 @@
-# Two-stage LoRA fine-tuning configuration
+# Two-stage LoRA fine-tuning configuration.
 #
-# Must match Supplementary Table 13. The values below are taken from the
-# response letter (R4-8 / R1-4); VERIFY each against Supplementary Table 13
-# before resubmission.
+# Shared values match the supplementary table "Hyperparameters for the
+# LoRA-based supervised fine-tuning" and the stage-specific LLaMA-Factory YAMLs.
 
 base_model: Qwen2.5-Coder-7B-Instruct
+model_name_or_path: /data/modou/llmfactory/models/Qwen/Qwen2.5-Coder-7B-Instruct
 
 lora:
-  target_modules: all-linear      # "LoRA on all linear layers"
-  # TODO: add rank r, alpha, and dropout from Supplementary Table 13
-  # r: ...
-  # alpha: ...
-  # dropout: ...
+  finetuning_type: lora
+  target_modules: all-linear
+  llamafactory_target: all
+  rank: 8
+  alpha: 16
+  dropout: 0.0
 
 training:
+  stage: sft
+  do_train: true
+  prompt_template: qwen
   learning_rate: 1.0e-4
   lr_scheduler: cosine
-  epochs: 3
-  per_device_batch_size: 1
+  warmup_ratio: 0.03
+  epochs: 3.0
+  per_device_train_batch_size: 1
   gradient_accumulation_steps: 16
+  effective_batch_size: 16
   precision: fp16
   max_seq_length: 4096
+  max_samples: 200000
+  overwrite_cache: true
+  preprocessing_num_workers: 16
+  ddp_timeout: 180000000
 
-# Two stages share this configuration:
-#   stage 1: structured description  -> formal CP model
-#   stage 2: formal CP model         -> docplex.cp solver code
+evaluation:
+  validation_split: 0.05
+  per_device_eval_batch_size: 1
+  eval_strategy: steps
+  eval_steps: 200
+
+logging:
+  logging_steps: 10
+  save_steps: 100
+  plot_loss: true
+  overwrite_output_dir: true
+
+stages:
+  stage2_formal2model:
+    dataset: stage2_formal2model_aug0527
+    output_dir: saves/qwen25-coder-7b/cpam_stage2_formal2model_aug0527
+    default_system: "You are a mathematical modeling expert for constraint programming. Given a structured problem formulation in JSON, produce a formal mathematical model in JSON using CPLEX CP Optimizer notation. Output ONLY valid JSON, no markdown, no prose."
+  stage3_model2code:
+    dataset: stage3_model2code_aug0527
+    output_dir: saves/qwen25-coder-7b/cpam_stage3_model2code_aug0527
+    default_system: "You are a constraint programming expert specialising in IBM CP Optimizer (docplex.cp). Given a mathematical model in JSON, generate complete executable Python code. No comments, no markdown, no prose. Output Python code only."
