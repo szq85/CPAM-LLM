@@ -7,16 +7,9 @@ Usage:
   python main.py --demo scheduling        # run a demo problem
   python main.py --demo dna
   python main.py --demo vrp
-  python main.py --input "problem..."    # single problem
-  python main.py --file problem.txt       # from file
   python main.py --show-kb               # knowledge base stats
-  python main.py --augment 3             # run chaos-map augmentation demo
   python main.py --solve                 # generate + immediately solve
-  python main.py --batch-solve           # batch solve all demo problems
-  python main.py --data-dir /path/data   # specify data directory
-  python main.py --export-sft            # export SFT dataset
-  python main.py --export-kb             # export KB as FCA files for review
-  python main.py --export-kb OUTPUT_DIR  # specify output directory
+
 """
 import argparse, json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))

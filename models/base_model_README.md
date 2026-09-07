@@ -50,15 +50,15 @@ After downloading, this directory should contain the model folder:
 
 ```
 models/
+├── base_model_README.md                # this file
 ├── base/
-│   ├── README.md                       # this file
 │   └── Qwen2.5-Coder-7B-Instruct/      # ← downloaded base model
 │       ├── config.json
 │       ├── model-*.safetensors
 │       ├── tokenizer.json
 │       └── ...
-├── stage1_lora/                        # math-modeling adapter (in repo / DOI)
-└── stage2_lora/                        # code-generation adapter (in repo / DOI)
+├── stage1_lora/                        # math-modeling adapter (included in repo)
+└── stage2_lora/                        # code-generation adapter (included in repo)
 ```
 
 ## Role in CPAM-LLM
@@ -72,24 +72,6 @@ base model is loaded once and the two adapters are attached to serve:
 - **Stage 3** (solver-code generation) — served as model name `stage3` on port 6008.
 
 The exact serving commands (vLLM / LLaMA-Factory), verification steps, and
-troubleshooting are in [`../../docs/MODEL_SERVING.md`](../../docs/MODEL_SERVING.md).
+troubleshooting are in [`../docs/MODEL_SERVING.md`](../docs/MODEL_SERVING.md).
 Qwen recommends vLLM for deployment. The adapter folders, the LoRA configuration,
 and the folder-to-stage mapping are documented in [`../README.md`](../README.md).
-
-## License and citation
-
-Qwen2.5-Coder-7B-Instruct is released by Alibaba Cloud under the **Apache 2.0**
-license; the license text is included in the Hugging Face repository. This
-project's MIT license covers the CPAM-LLM code and the released adapters, not the
-base model — the base model remains under its own Apache 2.0 terms.
-
-If you use the base model, cite the Qwen2.5-Coder technical report:
-
-```bibtex
-@article{hui2024qwen2coder,
-  title   = {Qwen2.5-Coder Technical Report},
-  author  = {Hui, Binyuan and Yang, Jian and Cui, Zeyu and Yang, Jiaxi and Liu, Dayiheng and others},
-  journal = {arXiv preprint arXiv:2409.12186},
-  year    = {2024}
-}
-```

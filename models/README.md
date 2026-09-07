@@ -50,10 +50,9 @@ are listed in `configs/lora_config.yaml`.
 
 ## Distribution
 
-The adapters exceed the standard GitHub upload size and are therefore deposited
-in a persistent DOI-minting repository (Zenodo / Hugging Face). The download link
-is provided in the manuscript's Code-availability statement; place the downloaded
-folders here as shown above.
+The adapter files are included in this repository. Only the base Qwen model is
+external because of its size; download it as described in
+[`base_model_README.md`](base_model_README.md).
 
 ## Serving
 

@@ -30,7 +30,7 @@ API_BASE_URL = os.environ.get(
     os.environ.get("API_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"),
 )
 API_KEY      = os.environ.get("CPAM_API_KEY", "")
-API_MODEL    = os.environ.get("CPAM_API_MODEL", os.environ.get("API_MODEL", "qwen-plus"))
+API_MODEL    = os.environ.get("CPAM_API_MODEL", os.environ.get("API_MODEL", "qwen-XXX"))
 
 # Fine-tuned local adapters.
 FT_API_KEY  = os.environ.get("FT_API_KEY", "0")
@@ -68,7 +68,7 @@ KB_DEDUP_THRESHOLD       = 0.85
 KB_REBUILD_BATCH         = 5
 
 # Paths.
-DATA_PATH     = os.path.join(os.path.dirname(__file__), "data", "CP_weitiao140_clean.xlsx")
+DATA_PATH     = os.path.join(os.path.dirname(__file__), "data", "KB.xlsx")
 DATASET_SHEET = "Sheet1"
 OUTPUT_DIR    = os.path.join(os.path.dirname(__file__), "output")
 

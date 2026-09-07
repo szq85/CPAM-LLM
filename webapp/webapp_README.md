@@ -20,7 +20,7 @@ in the top-level README.
 ## Running
 
 ```bash
-python build_kb.py                 # build the knowledge base once, if not already done
+python build_kb.py                 # optional: rebuild only after changing the source table or FCA code
 pip install flask flask-cors       # one-time
 export CPAM_API_KEY="sk-..."        # Windows PowerShell: $env:CPAM_API_KEY="sk-..."
 python webapp/app.py
@@ -74,7 +74,7 @@ webapp/
 ├── app.py                 # Flask backend: the pipeline exposed as JSON routes
 ├── templates/index.html   # single-page front-end
 ├── static/logo.svg
-└── README.md              # this file
+└── webapp_README.md       # this file
 ```
 
 ## Notes

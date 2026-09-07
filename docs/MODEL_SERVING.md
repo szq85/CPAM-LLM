@@ -34,9 +34,10 @@ leave the endpoints down and every stage runs on the cloud API (`config.py` →
 `API_BASE_URL` / `API_MODEL`). The steps below are for running the actual
 fine-tuned model.
 
-## Step 1 — Download the artifacts from the server
+## Step 1 — Download the base model
 
-You need the base model and the two LoRA adapters.
+The two LoRA adapter directories are included in this repository. You only need
+to download the Qwen base model and place it under `models/base/`.
 
 **Base model (Qwen2.5-Coder-7B-Instruct).** Download once from Hugging Face:
 
@@ -46,11 +47,7 @@ huggingface-cli download Qwen/Qwen2.5-Coder-7B-Instruct \
     --local-dir ./models/base/Qwen2.5-Coder-7B-Instruct
 ```
 
-**LoRA adapters (Stage 2 and Stage 3).** These are the fine-tuned weights released
-with this work. Download them from the release location given in
-[`../models/README.md`](../models/README.md) (a DOI-minting repository, e.g.
-Zenodo or Hugging Face, since the adapters exceed the standard GitHub upload
-size). Place them so the tree looks like:
+The expected local tree is:
 
 ```
 models/
@@ -70,13 +67,6 @@ models/
 > the math adapter as model name `stage2` on port 6006 and the code adapter as
 > model name `stage3` on port 6008, as shown below. Confirm which folder is which
 > in `models/README.md`.
-
-If you transfer the artifacts from a remote training server rather than a
-public repository, copy them down with `scp` / `rsync`, for example:
-
-```bash
-rsync -avz user@server:/path/to/CPAM_LLM/models/ ./models/
-```
 
 ## Step 2 — Serve the two adapters locally
 

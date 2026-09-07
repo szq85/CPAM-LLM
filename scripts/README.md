@@ -10,10 +10,10 @@ works without anything here.
 |---------|--------------|
 | `python build_kb.py` | Build the concept-lattice knowledge base once → `kb_store/knowledge_base.json` (`--force` to rebuild). |
 | `python main.py` | Command-line interactive pipeline (`--show-kb` prints KB statistics). |
-| `python webapp/app.py` | Web interface → `http://127.0.0.1:5000` (see `webapp/README.md`). |
+| `python webapp/app.py` | Web interface → `http://127.0.0.1:5000` (see `webapp/webapp_README.md`). |
 | `python gui_app.py` | Tkinter desktop GUI. |
-| `python demo_offline.py` | End-to-end demonstration with canned outputs (no API key or solver needed). |
-| `python batch_test.py` | Batch evaluation over the test set in `data/test/`. |
+| `python -X utf8 demo_offline.py` | End-to-end demonstration with canned outputs (no API key or solver needed). |
+| `python main.py --batch-solve` | Batch generation and solving for the five built-in demo scenarios. |
 
 ## Serving the fine-tuned model
 
@@ -32,7 +32,7 @@ evaluation:
 #!/usr/bin/env bash
 set -e
 python build_kb.py
-python batch_test.py
+python main.py --batch-solve
 ```
 
 This is optional; the entry points above are the supported way to run the
