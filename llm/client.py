@@ -9,15 +9,11 @@ from config import (
     FT_REQUEST_TIMEOUT, API_REQUEST_TIMEOUT,
 )
 
-# each stage use "ft" / "api" / "api(ft-fallback)"
-# batch_test resulteachstagefine-tuned API fallback
-# setup-time etc.constraintbecause FT API
 LAST_BACKEND: dict = {}
 
 # Cumulative token usage across all LLM calls in the current process. Each API
 # response carries a "usage" block ({prompt_tokens, completion_tokens,
-# total_tokens}); _call accumulates it here so callers (e.g. batch_test) can
-# report the total token consumption of the whole run.
+# total_tokens}); _call accumulates it for run-level reporting.
 TOKEN_USAGE: dict = {"prompt_tokens": 0, "completion_tokens": 0,
                      "total_tokens": 0, "calls": 0}
 
@@ -95,7 +91,7 @@ def _call(base_url: str, api_key: str, model: str,
 
 
 # ─────────────────────────────────────────────────────────────
-# stage parse ft model
+# Fine-tuned model selection and endpoint helpers.
 # ─────────────────────────────────────────────────────────────
 
 def _ft_model_for_stage(stage: str) -> str:
@@ -126,7 +122,7 @@ def chat(
     max_tokens: int     = MAX_TOKENS,
     json_mode: bool     = False,
     backend: str        = "api",
-    stage: str          = "",  # stage ft adapter
+    stage: str          = "",  # fine-tuned adapter key
 ) -> str:
     """
     Call the LLM with the specified backend.

@@ -408,7 +408,7 @@ def static_semantic_check(code: str) -> Tuple[bool, List[str]]:
     ]
     errors = [msg for pat, msg in checks if not re.search(pat, code)]
     errors += antipattern_check(code)
-    # undefinedvariable → NameError feedback loopfix
+    # Report undefined names that would cause a runtime NameError.
     errors += undefined_name_check(code)
     return len(errors) == 0, errors
 

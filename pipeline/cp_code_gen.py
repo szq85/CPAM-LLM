@@ -543,7 +543,7 @@ def _repair_syntax(code: str, max_iter: int = 8) -> Tuple[str, bool]:
     import ast as _ast
     try:
         _ast.parse(code)
-        return code, False  # alreadyvalid → leave unchanged
+        return code, False
     except SyntaxError:
         pass
 
@@ -555,7 +555,7 @@ def _repair_syntax(code: str, max_iter: int = 8) -> Tuple[str, bool]:
         except SyntaxError as e:
             msg = (e.msg or "").lower()
             if "never closed" not in msg or not e.lineno:
-                break  # non-"" → forciblyguess
+                break
             lines = work.split('\n')
             li = e.lineno - 1
             if li < 0 or li >= len(lines):
@@ -572,7 +572,7 @@ def _repair_syntax(code: str, max_iter: int = 8) -> Tuple[str, bool]:
         _ast.parse(work)
         return work, (work != code)
     except SyntaxError:
-        return code, False  # → keepas-is feedback loop
+        return code, False
 
 
 def _has_setup_intent(code: str, structured: Dict) -> bool:
@@ -589,7 +589,6 @@ def _has_setup_intent(code: str, structured: Dict) -> bool:
     if any(k in blob for k in ("setup_time", "setup_times", "transition_matrix",
                                "transition_times", "sequence_var", "_seq")):
         return True
-    # constraintdescription setup key
     for c in (structured.get("constraints", []) or []):
         d = (str(c.get("description", "")) + " " + str(c.get("type", ""))).lower()
         if "setup" in d or "sequence-dependent" in d or "changeover" in d:
@@ -866,7 +865,7 @@ def _safe_apply(code: str, transform, label: str, verbose: bool) -> Tuple[str, b
         if verbose:
             print(f"  [{label}] reverted (would break parseability, original kept)")
         return code, False
-    # guard no output undefined name NameError
+    # Reject transformations that introduce a new undefined name.
     if before_ok and _parses(new_code):
         new_undef = _undefined_names(new_code) - _undefined_names(code)
         if new_undef:

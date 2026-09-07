@@ -2,15 +2,6 @@ import os
 
 # Stage routing: "api" uses the cloud model, "ft" uses local fine-tuned adapters.
 
-# "align" → gold + variant knowledge basetype 6 field
-# Formal Expression base fieldverbatimdistribution only"variant
-# base diff" parameter/constraintdescriptioncover constraint deterministic
-# gold base 100% Stage-2 fine-tunedtraining distribution variantonlycontrolled
-# "Stage-1 Stage-2 fine-tuned"
-# "kb" → type Formal Expression verbatimtraining set
-# buteachvariant only base
-# "free" → generate Formal Expression onlyrevert/
-# "llm" → etc. "free"
 STAGE1_MODE = os.environ.get("STAGE1_MODE", "free")   # "align" | "kb" | "free" | "llm"
 STAGE1_VERIFY = os.environ.get("STAGE1_VERIFY", "1") != "0"
 

@@ -45,12 +45,6 @@ except Exception as _e:
     _TYPE_VOCAB = {}
 
 
-# ── NL keyproblem type FCA constraintmisclassify ──────────────────
-# RAG-FCA matched_domain only"constraint" problem type
-# e.g. VRP misclassify Aircraft typeinject few-shot
-# Stage-1 outputforciblytype heretype NL
-# type FCA result
-# formal_expression_refs.json / constraint_type_vocab.json consistent
 _TYPE_SIGNATURES: Dict[str, List] = {
     "VRP": [("vehicle", 3), ("depot", 3), ("routing", 3), ("subtour", 3),
             ("truck", 3), ("fleet", 2), ("route", 2), ("customer", 2),
@@ -82,9 +76,7 @@ def _detect_problem_type(nl_text: str) -> str:
     """
     low = (nl_text or "").lower()
 
-    # 1) matched 5 xstrong keywordno-overlap
-    # "vehicle" any "electric vehicle" /
-    # problem VRP
+    # Prefer domain-specific strong keywords before the weighted fallback.
     from rag_fca.fca import detect_scenario_strong
     strong = detect_scenario_strong(low)
     if strong:
@@ -95,9 +87,9 @@ def _detect_problem_type(nl_text: str) -> str:
               for t, sig in _TYPE_SIGNATURES.items()}
     ranked = sorted(scores.items(), key=lambda kv: -kv[1])
     if not ranked or ranked[0][1] < 3:
-        return ""  # insufficient evidence →
+        return ""  # No domain has enough evidence.
     if len(ranked) > 1 and ranked[0][1] - ranked[1][1] < 2:
-        return ""  # →
+        return ""  # The top scores are too close to disambiguate.
     return ranked[0][0]
 
 
@@ -231,21 +223,6 @@ def _attach_rag_metadata(result: Dict, rag: Dict, certain_implicit: List[str],
     return result
 
 
-# ════════════════════════════════════════════════════════════════════════════
-# deterministic Formal-Expression codex Stage 1handle
-#
-# already 5 problem base Formal Expression alreadyverbatimknowledge base(gold) eachvariant
-# base data `Constraint` (e.g. "1,3")or NL regex
-# deterministicdetect"constraint" alreadytype LLM generate
-# type/summary/value_or_source Stage-2 fine-tunedtraining distribution
-# gold + optional id append controlledtemplate constraint/parametercover + regexextractnumeric value
-# base field variantonlycontrolled → training distribution
-#
-# codex keep VRP "capacityrelax/capacity"fine-tuned
-# type codex capacity_relaxed/capacity_setting capacityrelax CATALOG
-# `relax` field remove base capacityconstraint capacityonly parametercover addout-of-vocab type
-# ════════════════════════════════════════════════════════════════════════════
-
 _CONSTRAINT_CUE_RE = re.compile(
     r"\b(constraint|constraints|required|require|requires|must|shall|should|"
     r"not exceed|no more than|at most|at least|within|between|limited|limit|"
@@ -311,8 +288,8 @@ def _dedup_constraints(cons: List[Dict], verbose: bool = False) -> List[Dict]:
     def _sig(c: Dict) -> tuple:
         t = str(c.get("type", "")).strip().lower()
         d = str(c.get("description", "")).lower()
-        nums = tuple(re.findall(r"\d+(?:\.\d+)?", d))  # numeric value e.g. 20,100
-        # key jobN / opN / customerN / stationN etc. ""
+        nums = tuple(re.findall(r"\d+(?:\.\d+)?", d))
+        # Include entity indices so constraints on different entities stay distinct.
         idx = tuple(sorted(set(re.findall(
             r"\b(?:job|operation|op|customer|node|station|module|period|column|row)\s*\d+", d))))
         return (t, nums, idx)
@@ -431,7 +408,6 @@ Rules:
     by_id = {c.get("id"): c for c in cons}
     n_num = n_param = n_add = n_del = 0
 
-    # (1) numeric value → onlyshouldconstraint description type leave unchanged
     for fx in (audit.get("numeric_fixes") or []):
         if not isinstance(fx, dict):
             continue
@@ -441,7 +417,6 @@ Rules:
                 by_id[cid]["description"] = desc
                 n_num += 1
 
-    # (1b) parameternumeric value → onlycoveralreadyparameter value_or_source
     params = list(result.get("parameters", []))
     pnames = {p.get("name") for p in params}
     for fx in (audit.get("param_fixes") or []):
@@ -455,14 +430,12 @@ Rules:
                     n_param += 1
     result["parameters"] = params
 
-    # (3) extra constraint → remove API NL constraint
     extra_ids = set(audit.get("extra_constraint_ids") or [])
     if extra_ids:
         kept = [c for c in cons if c.get("id") not in extra_ids]
         n_del = len(cons) - len(kept)
         cons = kept
 
-    # (3b) duplicateconstraint → remove API duplicate id keep
     dup_ids = set(audit.get("duplicate_constraint_ids") or [])
     n_dup = 0
     if dup_ids:
@@ -498,12 +471,12 @@ Rules:
             cons.append({"id": "", "type": ctype, "description": desc})
             n_add += 1
 
-    # (3c) deterministicde-duplicationfallback i.e. API etc.duplicateconstraint
+    # (3c) Remove duplicates introduced by API verification or fallback logic.
     before = len(cons)
     cons = _dedup_constraints(cons, verbose=verbose)
     n_dup += before - len(cons)
 
-    # constraint id C1..Cn
+    # Renumber constraints contiguously after edits.
     for i, c in enumerate(cons, start=1):
         c["id"] = f"C{i}"
     result["constraints"] = cons
@@ -624,16 +597,13 @@ Rules:
     existing_names = {p.get("name") for p in params}
     for p in extra.get("parameters", []) or []:
         if isinstance(p, dict) and p.get("name") in existing_names:
-            _merge_parameter(params, p)   # name exists in gold -> safe value override
+            _merge_parameter(params, p)   # Existing gold parameter: safe value override.
     result["parameters"] = params
     if verbose:
         print(f"  [Stage 1] appended {len(novel)} novel constraint(s) beyond the catalog (LLM fallback)")
     return result
 
 
-# eachproblem type each optional id → append controlled constrainttemplate type mustcontrolled vocab
-# VRP id1(capacityrelax)/id3(capacity) CATALOG.relax remove
-# base constraint _dynamic_parameter_overrides coverparameter out-of-vocab type
 OPTIONAL_FORMAL_CONSTRAINTS: Dict[str, Dict[int, List[Dict[str, str]]]] = {
     "Aircraft Skin Processing": {
         1: [{"type": "time_window",
@@ -691,7 +661,6 @@ OPTIONAL_FORMAL_CONSTRAINTS: Dict[str, Dict[int, List[Dict[str, str]]]] = {
     },
 }
 
-# each optional id → parametercovertemplate default value numeric valueregexextractcover
 OPTIONAL_PARAMETER_OVERRIDES: Dict[str, Dict[int, List[Dict[str, str]]]] = {
     "Charging Station Location": {
         1: [{"name": "nbDemandAreas", "description": "Number of demand areas.",
@@ -748,9 +717,8 @@ def _relaxed_base_names(nl_text: str, problem_type: str) -> set:
     return out
 
 
-# base constraint(CATALOG) → gold constraints should type "relaxremove"locateremovex
 _BASE_NAME_TO_GOLD_TYPE = {
-    "vehicle_capacity": "capacity",  # VRP capacityrelax → remove gold type=capacity constraint
+    "vehicle_capacity": "capacity",
 }
 
 
@@ -803,7 +771,7 @@ def _dynamic_parameter_overrides(nl_text: str, problem_type: str,
                         "value_or_source": f"{pct:g}"})
 
     if problem_type == "VRP":
-        # capacity constraint only NL cover vehicle_capacity
+        # Extract the vehicle capacity only when it is stated in the NL text.
         m = re.search(r"capacity(?: value)?(?: of| is| set to)?\s*(\d+)", low, re.I)
         if m:
             out.append({"name": "vehicle_capacity", "description": "Capacity per vehicle.",
@@ -874,7 +842,6 @@ def _strip_relaxed_phrases(summary: str, relaxed: set) -> str:
     if not summary or not relaxed:
         return summary
     s = summary
-    # eachrelax base constraint summary /
     phrase_map = {
         "vehicle_capacity": [
             r",?\s*respecting (?:vehicle )?capacity constraints?",
@@ -886,7 +853,6 @@ def _strip_relaxed_phrases(summary: str, relaxed: set) -> str:
     for name in relaxed:
         for pat in phrase_map.get(name, []):
             s = re.sub(pat, "", s, flags=re.IGNORECASE)
-    # /
     s = re.sub(r"\s*,\s*,", ",", s)
     s = re.sub(r"\s*,\s*\.", ".", s)
     s = re.sub(r"\s{2,}", " ", s).strip()
@@ -907,7 +873,6 @@ def _compose_formal_expression(ref: Dict, nl_text: str, problem_type: str,
     relaxed      = _relaxed_base_names(nl_text, problem_type)
     gold_param_names = {p.get("name") for p in result.get("parameters", [])}
 
-    # 1) relax remove relax matched base constraint gold type locate
     if relaxed:
         drop_types = {_BASE_NAME_TO_GOLD_TYPE.get(n) for n in relaxed} - {None}
         if drop_types:
@@ -916,10 +881,6 @@ def _compose_formal_expression(ref: Dict, nl_text: str, problem_type: str,
                 print(f"  [compose] variant relaxation -> removed base constraint type={sorted(drop_types)}")
             result["constraints"] = kept
 
-    # 2) append optional controlledconstraint data description numeric value★ NL extract
-    # dynamicgenerate★ non-templatedefault value otherwise budget template 30000
-    # non- NL 45000 utilization 90% non- 95% similarity 10% non- 5% constraintnumeric value
-    # fine-tuned Stage-2/3 description code numeric valuemust NL
     dyn_desc = _variant_constraint_descriptions(nl_text, problem_type, optional_ids)
     constraints = list(result.get("constraints", []))
     for oid in optional_ids:
@@ -928,19 +889,15 @@ def _compose_formal_expression(ref: Dict, nl_text: str, problem_type: str,
         for j, item in enumerate(templates):
             desc = item["description"]
             if custom and j < len(custom) and custom[j]:
-                desc = custom[j]  # NL numeric valuecovertemplatedefault value
+                desc = custom[j]  # Prefer the NL-derived description when available.
             constraints.append({"id": "", "type": item["type"], "description": desc})
     result["constraints"] = constraints
 
-    # 3) parameter ★only cover gold alreadyparameter value_or_source e.g. vehicle_capacity 200→180
-    # nbDemandAreas 30→40 add gold parameterfield e.g. MAX_ALLOWED_COST
-    # SIMILARITY_PERCENTILE node_to_skip fine-tunedno key
-    # distribution shift numeric valuealreadyshouldconstraint description Stage-2/3 use
     params = list(result.get("parameters", []))
     def _override_existing(ov):
         nm = ov.get("name")
         if nm in gold_param_names:
-            _merge_parameter(params, ov)  # matched gold parameter → cover safe
+            _merge_parameter(params, ov)  # Override only an existing gold parameter.
         elif verbose:
             print(f"  [compose] skipped non-gold parameter '{nm}' (its value lives in the "
                   f"constraint description; avoids distribution drift)")
@@ -951,11 +908,6 @@ def _compose_formal_expression(ref: Dict, nl_text: str, problem_type: str,
         _override_existing(ov)
     result["parameters"] = params
 
-    # 3b) relaxparameter relax parameter NL keep e.g. vehicle_capacity reference
-    # but description "onlyreference constraint" mustallparametercover
-    # otherwise _merge_parameter description cover constraintlistcapacity parameter
-    # constraint x(summary/constraints/parameterdescription)consistent → fine-tunedcapacityconstraint
-    # constraint/no-solution
     if relaxed:
         for p in result.get("parameters", []):
             if p.get("name") in relaxed:
@@ -963,19 +915,14 @@ def _compose_formal_expression(ref: Dict, nl_text: str, problem_type: str,
                 if "reference only" not in d.lower():
                     p["description"] = d + " (reference only; NOT enforced as a constraint)."
 
-    # 4) constraint id C1..Cn
+    # Renumber constraints contiguously after applying the variant.
     for i, c in enumerate(result.get("constraints", []), start=1):
         c["id"] = f"C{i}"
 
-    # 5) summary ★any "Variant: X" training distributionno pure- shift variant relax/
-    # remove base constraint summary ensure summary
-    # constraints self-consistent otherwise summary "respecting capacity constraints" constraintlist
-    # alreadycapacityconstraint contradiction fine-tuned summary constraint
-    # no-solution feedback loopconstraint
     if relaxed:
         result["problem_summary"] = _strip_relaxed_phrases(
             result.get("problem_summary", ""), relaxed)
-    # constraint_label onlymetadata Stage-2 6 field
+    # Keep the label as metadata; it is not part of the six Stage-2 fields.
     result["constraint_label"] = (",".join(str(i) for i in optional_ids)
                                   if (optional_ids or relaxed) else "base")
     return result
@@ -1045,7 +992,7 @@ def _apply_variant_diff(gold: Dict, diff: Dict, verbose: bool = False) -> Dict:
     result = copy.deepcopy(gold)
     diff = diff or {}
 
-    # 1) parametercover base parametermatch only value_or_source
+    # 1) Override values for parameters that already exist in the base.
     pov = diff.get("param_value_overrides") or {}
     if isinstance(pov, dict):
         for p in result.get("parameters", []):
@@ -1053,7 +1000,7 @@ def _apply_variant_diff(gold: Dict, diff: Dict, verbose: bool = False) -> Dict:
             if nm in pov and pov[nm]:
                 p["value_or_source"] = str(pov[nm])
 
-    # 2) constraintdescriptioncover id match only description leave unchanged type
+    # 2) Match constraint IDs and replace descriptions without changing their types.
     cdo = diff.get("constraint_desc_overrides") or {}
     if isinstance(cdo, dict):
         for c in result.get("constraints", []):
@@ -1061,13 +1008,13 @@ def _apply_variant_diff(gold: Dict, diff: Dict, verbose: bool = False) -> Dict:
             if cid in cdo and cdo[cid]:
                 c["description"] = str(cdo[cid])
 
-    # 3) removeconstraint variantrelax/remove base constraint e.g."capacity"
+    # 3) Remove base constraints requested by the variant.
     rm = set(diff.get("remove_constraint_ids") or [])
     if rm:
         result["constraints"] = [c for c in result.get("constraints", [])
                                  if c.get("id") not in rm]
 
-    # 4) appendvariantconstraint type mustcontrolled vocab otherwise key
+    # 4) Append only constraints whose types are in the controlled vocabulary.
     allowed = set()
     spec = _TYPE_VOCAB.get(result.get("problem_type", "")) or {}
     allowed = set(spec.get("constraint_types", []))
@@ -1085,7 +1032,7 @@ def _apply_variant_diff(gold: Dict, diff: Dict, verbose: bool = False) -> Dict:
             "description": str(nc.get("description", "")),
         })
 
-    # 5) objectivecover onlyvariantobjective/
+    # 5) Apply an optional objective override.
     oo = diff.get("objective_override") or {}
     if isinstance(oo, dict):
         obj = result.setdefault("objective", {})
@@ -1093,7 +1040,7 @@ def _apply_variant_diff(gold: Dict, diff: Dict, verbose: bool = False) -> Dict:
             if oo.get(k):
                 obj[k] = oo[k]
 
-    # constraint id C1..Cn gold
+    # Renumber constraints contiguously after applying the diff.
     for i, c in enumerate(result.get("constraints", []), start=1):
         c["id"] = f"C{i}"
     return result
@@ -1182,13 +1129,9 @@ def run(nl_text: str, kb: KnowledgeBase, verbose: bool = True) -> Dict:
     #   Key fix: do not let the LLM freely generate the whole Formal Expression
     #   (that drifts type/summary/value_or_source away from the Stage-2 training
     #   distribution). Two steps:
-    # (1) deterministic gold constraintregexdetectvariant
-    # constraint controlledtemplate appendconstraint/coverparameter relax removerelax base
-    # constraint regexextractnumeric value already 5 varianti.e.
-    # 100% capacity_relaxed out-of-vocab type
-    # (2) LLM only NL coverconstraint sentence
-    # LLM only"coverconstraint" controlled vocabappend alreadyvariant
-    # training distribution
+    # (1) Compose the base template and detected variants deterministically.
+    # (2) Use the LLM only for genuinely novel constraint wording, keeping all
+    # generated types and fields within the training distribution.
     if STAGE1_MODE == "align" and matched_ref:
         result = _compose_formal_expression(matched_ref, nl_text, matched_domain,
                                             verbose=verbose)

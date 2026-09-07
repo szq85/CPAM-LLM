@@ -194,9 +194,9 @@ def _parse_output(stdout: str, stderr: str, elapsed: float) -> Dict:
     low = stdout.lower()
     has_traceback = "traceback (most recent call last)" in stderr.lower()
     no_sol_markers = (
-        "no feasible solution",  # generated code
+        "no feasible solution",
         "no solution found",
-        "model has no solution",  # CP Optimizer engineoutput
+        "model has no solution",  # Solver engine output.
         "search completed, model has no solution",
     )
     if (not has_traceback) and any(m in low for m in no_sol_markers):
@@ -346,7 +346,6 @@ def save_solve_result(
         "Source":              "solver",
     }])
 
-    # append CSV
     master_csv = os.path.join(output_dir, "cpam_results.csv")
     if os.path.exists(master_csv):
         existing = pd.read_csv(master_csv, encoding="utf-8-sig")
@@ -358,7 +357,6 @@ def save_solve_result(
         combined = new_row
     combined.to_csv(master_csv, index=False, encoding="utf-8-sig")
 
-    # solve CSV
     solve_csv = os.path.join(output_dir, f"{task_id}_solve.csv")
     new_row.to_csv(solve_csv, index=False, encoding="utf-8-sig")
 

@@ -656,15 +656,6 @@ def fuzzy_similarity(
 
 import re as _re_cue
 
-# ── "" no-overlap ────────────────────────────────────
-# eachonlyshould 4 x may matchedi.e.
-# "vehicle" VRP
-# "electric vehicle(s)" problem
-# forcibly VRP "vehicle" must""
-#
-# VRP only depot / subtour / "vehicle routing" /
-#  "vehicle arc" / fleet / truck / van / lorry / courier / TSP / CVRP / "last mile"
-# / "route flow" / "traveling salesman" //DNA/
 _DOMAIN_STRONG_CUES = {
     "Aircraft Skin Processing": [
         "makespan", "aircraft", "skin", "job shop", "job-shop", "flexible job",
@@ -692,7 +683,7 @@ _DOMAIN_STRONG_CUES = {
     ],
 }
 
-# nl_structuring import two derived
+# Derived cue sets shared with nl_structuring.
 _VRP_STRONG_CUES  = tuple(_DOMAIN_STRONG_CUES["VRP"])
 _FJSP_STRONG_CUES = tuple(_DOMAIN_STRONG_CUES["Aircraft Skin Processing"])
 
@@ -736,7 +727,7 @@ def detect_scenario_strong(q: str) -> str:
     ranked = sorted(present.items(), key=lambda kv: -kv[1])
     if ranked[0][1] - ranked[1][1] >= 2:
         return ranked[0][0]
-    return ""  # strong keyworddistinct →
+    return ""  # Strong-keyword scores are ambiguous.
 
 
 def _detect_scenario(q: str) -> str:
@@ -752,7 +743,7 @@ def _detect_scenario(q: str) -> str:
     if strong:
         return strong
 
-    # but strong keywordalready
+    # Fall back to weighted cues when no strong keyword matched.
     domain_cues = {
         "Aircraft Skin Processing": [("aircraft", 3), ("skin", 3), ("job shop", 3),
             ("makespan", 3), ("processing time", 2), ("operation", 1),
