@@ -30,6 +30,7 @@ API_BASE_URL = os.environ.get(
     os.environ.get("API_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"),
 )
 API_KEY      = os.environ.get("CPAM_API_KEY", "")
+# Set CPAM_API_MODEL to a model available at the configured endpoint, e.g. qwen-plus.
 API_MODEL    = os.environ.get("CPAM_API_MODEL", os.environ.get("API_MODEL", "qwen-XXX"))
 
 # Fine-tuned local adapters.
