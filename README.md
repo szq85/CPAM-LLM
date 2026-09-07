@@ -1,12 +1,6 @@
 # CPAM-LLM
 
-CPAM-LLM is an automated data-to-model pipeline that converts an unstructured natural-language description of an optimization problem into a validated, executable Constraint-Programming (CP) model for IBM CP Optimizer (`docplex.cp`). The method integrates three components evaluated in the paper: a Retrieval-Augmented Generation framework grounded in Formal Concept Analysis (**RAG-FCA**) for structurally grounded constraint mapping; a **chaos-mapping** data-augmentation strategy for corpus construction; and a **two-stage LoRA** fine-tuning process that adapts a general-purpose language model to CP modeling and to CP Optimizer code. The framework is validated on five real-world applications — aircraft-skin processing, DNA nanostructure sequence design, reconfigurable photovoltaic energy storage, unmanned-vehicle logistics, and electric-vehicle charging-station location.
-
-This README describes how to install the software, obtain the data and model weights, and reproduce the main results. It also documents the repository layout and the interactive interfaces used in the paper.
-
-## Citation
-
-If you use this code, please cite.
+CPAM-LLM is an automated data-to-model pipeline that converts natural-language descriptions of optimization problems into validated, executable Constraint Programming models for IBM CP Optimizer (docplex.cp). It combines RAG-FCA for constraint mapping, chaos-mapping for data augmentation, and two-stage LoRA fine-tuning for CP modeling and code generation.
 
 ## Contents
 
@@ -41,9 +35,7 @@ Natural language
  solution
 ```
 
-Stage 2 (mathematical modeling) and Stage 3 (code generation) are produced by a two-stage LoRA fine-tuned model (base model: Qwen2.5-Coder-7B-Instruct). Natural-language structuring, validation, repair, and dynamic-constraint phrasing use a general-purpose API model. Per-stage routing is configured in `config.py` (`STAGE_ROUTING`).
-
-The RAG-FCA knowledge base is a formal concept lattice `L(K)` over a formal context `K = (G, M, I)`, where `G` is the set of problem instances, `M` is the set of named constraint types, objectives, and solution properties, and `I` is their incidence. Retrieval returns a formalized constraint structure (mathematical and code templates), which is what enables Stages 2 and 3 to produce the formal model and solver code. The released knowledge base contains 140 records, 138 concepts, 54 attributes, and 68 implications.
+Stage 2 (mathematical modeling) and Stage 3 (code generation) are produced by a two-stage LoRA fine-tuned model (base model: Qwen2.5-Coder-7B-Instruct). Natural-language structuring, validation, repair, and dynamic-constraint phrasing use a general-purpose API model.
 
 ## System requirements
 
@@ -58,9 +50,13 @@ The RAG-FCA knowledge base is a formal concept lattice `L(K)` over a formal cont
 Typical install time on a standard desktop is under five minutes (excluding the CPLEX installation).
 
 ```bash
-git clone https://github.com/szq85/CPAM_LLM.git
-cd CPAM_LLM
-pip install -r requirements.txt
+git clone https://github.com/szq85/CPAM-LLM.git
+cd CPAM-LLM
+python -m venv .venv
+# Linux/macOS
+source .venv/bin/activate
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
 A containerized environment is provided for a reproducible runtime:
@@ -76,8 +72,8 @@ If Docker Hub is not reachable, use the mirror-enabled form:
 docker build --build-arg PYTHON_IMAGE=docker.m.daocloud.io/library/python:3.11-slim -t cpam-llm .
 ```
 
-For the full environment checklist and Docker deployment commands, see
-[`docs/INSTALL_DOCKER.md`](docs/INSTALL_DOCKER.md).
+For model serving and deployment details, see
+[`docs/MODEL_SERVING.md`](docs/MODEL_SERVING.md).
 
 Set the API key for the general-purpose model (any OpenAI-compatible endpoint):
 
@@ -85,31 +81,26 @@ Set the API key for the general-purpose model (any OpenAI-compatible endpoint):
 export CPAM_API_KEY="sk-..."          # Windows PowerShell: $env:CPAM_API_KEY="sk-..."
 ```
 
-Build the knowledge base once; afterwards every entry point loads the resulting JSON file directly:
+The prebuilt knowledge base is already included at `kb_store/knowledge_base.json`,
+so no build step is needed for normal use. If you change the source table or the
+FCA code, rebuild it with:
 
 ```bash
-python build_kb.py                    # writes kb_store/knowledge_base.json; add --force to rebuild
+python build_kb.py                    # uses config.DATA_PATH and writes the JSON store
+python build_kb.py --xlsx PATH --force # rebuild from an explicit source workbook
 ```
 
 ## Data availability
 
 The datasets used to train and evaluate CPAM-LLM are released with this repository.
 
-- **Benchmark and case-study data** read by the generated solver code are in `data/` (one file per application domain).
-- **Training and test corpora.** For each sample, the natural-language description, the structured formulation, the formal CP model, and the executable solver code are provided. See `data/train/README.md` for the per-sample schema and the location of the corpus files.
-- **Chaos-mapping augmentation seeds** (initial state, control parameter, per-level perturbation rates, iteration count) are in `configs/augmentation_seeds.yaml`, so the augmented corpus can be regenerated deterministically.
-
-Large data files that exceed the GitHub upload size are deposited in a persistent DOI-minting repository; the link is provided in the manuscript's Data-availability statement and in `data/train/README.md`.
-
 ## Model weights
 
 The two-stage LoRA adapters are released so that the fine-tuned model can be reconstructed and its outputs verified.
 
-- Adapter weights are placed in `models/stage1_lora/` and `models/stage2_lora/`; see `models/README.md` for the base-model identifier (Qwen2.5-Coder-7B-Instruct), the LoRA configuration, and the serving command.
+- Adapter weights are included in `models/stage1_lora/` and `models/stage2_lora/`; the Qwen base model itself is not included. See `models/README.md` and `models/base_model_README.md` for the mapping and download instructions.
 - The fine-tuned stages are served as OpenAI-compatible endpoints (`FT_URL_STAGE2`, `FT_URL_STAGE3` in `config.py`). If the endpoints are unreachable, the client falls back to the general-purpose API automatically.
 - For the full workflow — downloading the base model and adapters, serving them locally on the two endpoints, and connecting the framework — see [`docs/MODEL_SERVING.md`](docs/MODEL_SERVING.md).
-
-Adapter weights that exceed the GitHub upload size are deposited in the same persistent repository as the data and linked from `models/README.md`.
 
 ## Reproducing the results
 
@@ -121,24 +112,21 @@ python build_kb.py
 python main.py
 
 # 3. run the offline end-to-end demonstration (no API key or solver required)
-python demo_offline.py
+python -X utf8 demo_offline.py
 ```
 
-`python main.py --show-kb` prints the knowledge-base statistics reported in the paper (records, concepts, attributes, implications). Generated results are written per task to `output/` as JSON and CSV.
-
-The data-curation and closed-loop sample-admission criteria used to build the corpus and to admit new samples to the knowledge base are documented in `docs/data_curation_criteria.md`.
 
 ## Interactive use
 
 Three interfaces call the same pipeline and the same knowledge base:
 
 ```bash
-python webapp/app.py     # web app   → http://127.0.0.1:5000  (see webapp/README.md)
+python webapp/app.py     # web app   → http://127.0.0.1:5000  (see webapp/webapp_README.md)
 python gui_app.py        # desktop GUI (Tkinter)
 python main.py           # command-line, interactive
 ```
 
-The web interface is documented separately in [`webapp/README.md`](webapp/README.md).
+The web interface is documented separately in [`webapp/webapp_README.md`](webapp/webapp_README.md).
 
 ## Repository structure
 
@@ -171,12 +159,12 @@ The web interface is documented separately in [`webapp/README.md`](webapp/README
 ├── llm/client.py             # OpenAI-compatible chat client (retries, FT → API fallback)
 ├── augmentation/chaos_augment.py   # chaos-mapping data augmentation
 │
-├── webapp/                   # Flask web interface (see webapp/README.md)
-├── data/                     # datasets and training/test corpora
+├── webapp/                   # Flask web interface (see webapp/webapp_README.md)
+├── data/                     # domain inputs, training archive, and test set
 ├── kb_store/                 # built knowledge base + human-readable exports
 ├── models/                   # two-stage LoRA adapter weights
 ├── configs/                  # augmentation seeds and LoRA configuration
-├── docs/                     # data-curation criteria
+├── docs/                     # deployment, serving, and curation documentation
 └── output/                   # generated results (JSON / CSV per task)
 ```
 
@@ -188,7 +176,7 @@ Settings are centralized in `config.py`. The most relevant:
 | ------------------------------------ | ------------------------------------- | ----------------------------------------------------- |
 | `CPAM_API_KEY` (env)               | API key for the general-purpose model | —                                                    |
 | `CPAM_API_BASE_URL` / `API_BASE_URL` | OpenAI-compatible endpoint          | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| `CPAM_API_MODEL` / `API_MODEL`     | API model name                        | `qwen-plus`                                         |
+| `CPAM_API_MODEL` / `API_MODEL`     | API model name                        | `qwen-XXX` (set explicitly for your endpoint)      |
 | `FT_URL_STAGE2`, `FT_URL_STAGE3` | fine-tuned model endpoints            | `http://localhost:6006/v1`, `:6008/v1`            |
 | `STAGE_ROUTING`                    | per-stage choice of fine-tuned vs API | math/code →`ft`; others → `api`                 |
 | `KB_UPDATE_POLICY`                 | knowledge-base admission gate         | `strict`                                            |

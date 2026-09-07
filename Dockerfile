@@ -32,9 +32,10 @@ RUN mkdir -p output kb_store \
     && chown -R appuser:appuser output kb_store
 USER appuser
 
-# Build the RAG-FCA knowledge base into the image so the web service starts
-# without a first-run preparation step. Rebuild the image after changing data/.
-RUN python build_kb.py --force --no-review
+# Reuse the prebuilt RAG-FCA knowledge base tracked in the repository. The
+# command exits without reading a source workbook when the JSON store exists,
+# so a clean clone does not need the optional training/source spreadsheet.
+RUN python build_kb.py --no-review
 
 EXPOSE 5000
 
