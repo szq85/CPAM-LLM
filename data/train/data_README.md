@@ -1,28 +1,29 @@
-# Dataset
+# Training data
 
-This directory holds the data used to build, train, and evaluate CPAM-LLM.
-The dataset is the foundation of the work: because high-quality, structured
-training data are scarce in constraint programming, CPAM-LLM is built on a
-purpose-made corpus of aligned *(natural-language description, formal CP model,
-solver code)* triples, expanded by a deterministic chaos-mapping augmentation
-strategy and organized into two linked corpora for the two-stage fine-tuning.
+This directory contains the training archive used by CPAM-LLM. The archive is
+kept separate from the runtime knowledge base and the test set.
 
 ## Overview
 
 The dataset spans **five real-world application domains**:
 
 - **DNA Sequence Design** — synthetic DNA sequence design under biochemical constraints;
-- **Battery Pack Design** — reconfigurable photovoltaic energy-storage scheduling;
+- **Battery Pack Design** — reconfigurable battery energy-storage scheduling;
 - **Vehicle Routing Problem** — capacitated vehicle routing / logistics;
 - **Charging Station Location** — electric-vehicle charging-station facility location;
-- **Aircraft Skin Processing** — multi-robot flexible job-shop scheduling.
+- **Aircraft Skin Processing** — flexible job-shop scheduling.
 
-Every instance is an aligned triple:
+`train_data.zip` contains two JSON arrays:
 
-1. a **natural-language description** of the optimization problem;
-2. a **formal CP model** (decision variables, constraints, objective) in CPLEX CP Optimizer notation;
-3. **executable `docplex.cp` solver code** that reads the corresponding input file and solves the instance.
+- `train_data/stage2_formal2model.json`: structured problem formulation to formal CP model examples;
+- `train_data/stage3_model2code.json`: formal CP model to executable `docplex.cp` code examples.
 
-The three representations are kept consistent with one another, which is what
-allows the two-stage model to learn *description → formal model* and then
-*formal model → code*.
+The two files are JSON arrays (not JSONL files) and are aligned by record order.
+They support the two fine-tuning
+stages: *description → formal model* and *formal model → code*. The five
+domains are DNA sequence design, battery-pack design, vehicle routing,
+charging-station location, and aircraft-skin processing.
+
+The current smoke-test set is separate at
+[`../test/test_dataset.json`](../test/test_dataset.json) and contains 10
+records (base plus first variant for each domain).
