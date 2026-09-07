@@ -21,16 +21,6 @@ FORMAL_EXPR_KEYS = [
 ]
 
 
-# ── constraintnormalize Stage-3 training distribution ────────────────────────
-#
-# fine-tuned Stage-3 math_expression generated code only
-# math modelconstraintalreadyset code alreadyvalidate
-# Stage-1/2 constraint e.g. "Geographic Separation"
-# "similar(i,j) in top 10%" Stage-3 API
-#
-# here training set"eachproblemeachxconstraint" onlygenerate
-# **anyalreadyvariant** alreadymatchvariantleave unchanged
-# numeric value "training distribution" anycontent
 _CANON_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                            "data", "canonical_constraints.json")
 try:
@@ -72,7 +62,7 @@ def _match_canonical_name(name: str, table: Dict[str, list]) -> Optional[str]:
         jac = len(nt & ct) / len(nt | ct) if (nt | ct) else 0.0
         ratio = SequenceMatcher(None, name.lower(), cand.lower()).ratio()
         score = max(jac, ratio)
-        # twoinfo orstring
+        # Require either two informative shared tokens or a high string-similarity score.
         shared_informative = len((nt & ct) - {"constraint", "constraints"})
         if (shared_informative >= 2 or ratio >= 0.8) and score > best_score:
             best, best_score = cand, score
@@ -97,7 +87,7 @@ def canonicalize_constraints(result: Dict, verbose: bool = True) -> Dict:
     if not table:
         return result
 
-    # typeallalready & numeric value
+    # Collect exact and numeric-free forms from the training catalog.
     known_exact, known_struct = set(), set()
     for variants in table.values():
         for v in variants:
@@ -108,20 +98,19 @@ def canonicalize_constraints(result: Dict, verbose: bool = True) -> Dict:
     for c in result.get("constraints_section", []) or []:
         cur = str(c.get("math_expression", ""))
         if _norm_expr(cur) in known_exact:
-            continue  # alreadyvalid → leave unchanged
+            continue  # Keep known training forms unchanged.
         name = str(c.get("name", "")).strip()
         canon_name = _match_canonical_name(name, table)
         if not canon_name:
             continue
         canonical = table[canon_name][0]
-        # onlynumeric value → validnumeric valuevariant → generate
+        # A numeric-only variant is valid and should remain unchanged.
         if _denumber(cur) == _denumber(canonical):
             continue
-        # butskeletontypexalreadyconstraintskeleton
-        # onlynumeric value/variant leave unchanged
+        # Any known numeric-free structure is also a valid numeric variant.
         if _denumber(cur) in known_struct:
             continue
-        c["math_expression"] = canonical  # →
+        c["math_expression"] = canonical
         if name != canon_name:
             c["name"] = canon_name
         fixed.append((name, cur[:45], canon_name, canonical[:45]))
@@ -189,7 +178,7 @@ def run(structured: Dict, kb: KnowledgeBase, verbose: bool = True) -> Dict:
         m = re.search(r'\{.*\}', raw, re.DOTALL)
         result = json.loads(m.group()) if m else {"raw_response": raw}
 
-    # constraintdistribution ensure Stage-3 =
+    # Normalize generated expressions before passing the result to Stage 3.
     result = canonicalize_constraints(result, verbose=verbose)
 
     if verbose:

@@ -202,7 +202,6 @@ def main():
     parser.add_argument("--show-kb",     action="store_true")
     parser.add_argument("--augment",     type=int, metavar="N",
                         help="Run chaos-map augmentation demo on N records")
-    # ── addsolvingparameter ─────────────────────────────────────────
     parser.add_argument("--data-dir",    type=str, default=None,
                         help="Path to data directory (default: ./data/)")
     parser.add_argument("--solve",       action="store_true",
@@ -211,7 +210,6 @@ def main():
                         help="Batch generate + solve all demo problems")
     parser.add_argument("--time-limit",  type=int, default=None,
                         help="CP solver TimeLimit in seconds (default from config)")
-    # ── data ───────────────────────────────────────────
     parser.add_argument("--export-sft",  type=str, metavar="PATH",
                         help="Export SFT training dataset to JSONL file")
     parser.add_argument("--export-kb",   nargs="?", const="output/kb_export",
@@ -225,11 +223,9 @@ def main():
     from rag_fca.knowledge_base import get_knowledge_base
     kb = get_knowledge_base()
 
-    # data
     data_dir = args.data_dir or os.path.join(os.path.dirname(__file__), "data")
     data_dir = os.path.abspath(data_dir)
 
-    # cover TimeLimit e.g.
     if args.time_limit:
         import config
         config.SOLVER_TIME_LIMIT = args.time_limit

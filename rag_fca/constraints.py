@@ -48,14 +48,14 @@ CATALOG: Dict[str, dict] = {
             "demand_allocation"],
    "optional": [
      {"id":1,"name":"demand_area_expansion",
-      # cover expanded / increased / grew / scaled up demand areas
+      # Match demand-area expansion variants.
       "regex":r"(?:number of\s+)?demand areas?[^.]*\b(?:expanded|increased|grew|grown|raised|scaled up)\b|\bfrom\s*30\s*to\s*40\b"},
      {"id":2,"name":"travel_cost_limit",
       "regex":r"service quality constraint|transportation cost[^.]*(?:shall not exceed|not exceed|no more than|at most|cannot exceed|must not exceed)"},
      {"id":3,"name":"budget_limit",
       "regex":r"budgetary (?:constraint|control)|budget range|sum of fixed costs[^.]*(?:within|between|range)"},
      {"id":4,"name":"operational_capacity_derating",
-      # \d+% non- 90% cover 95%/90% etc.percentageupper limit
+      # Match a percentage-based operational capacity limit.
       "regex":r"operational capacity constraint|load capacity constraint|(?:actual load|operational load|load capacity)[^.]*(?:not exceed|no more than|at most)[^.]*\d+\s*%|not exceed\s*\d+\s*%\s*of[^.]*(?:design )?capacity"},
      {"id":5,"name":"site_diversity",
       "regex":r"strategic diversity constraint|geographic diversity|most similar cost|similar cost characteristics|nearest\s*\d+(?:\.\d+)?\s*%[^.]*(?:pairs?|sites?)|at most one of (?:them|any two)"},

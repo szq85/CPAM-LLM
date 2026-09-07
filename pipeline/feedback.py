@@ -14,17 +14,10 @@ from rag_fca.knowledge_base import KnowledgeBase
 _DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 
 
-# onlymatch"problem" solverengine/ file
-# ★ "docplex" / "cplex" ★ any docplex **
-# AssertionError / TypeError / CpoException etc. API misuse traceback
-# docplex \site-packages\docplex\cp\modeler.py matchcode bug
-# misclassifyproblem **feedback loopdynamic**
-# no_overlap(ops, trans) setup-API misuse
-# onlymatch" / engine"
 _ENV_MARKERS = (
     "modulenotfounderror", "no module named", "importerror",
     "not installed",
-    "executable file should be defined",  # CP Optimizer enginelocate
+    "executable file should be defined",  # Missing solver executable.
     "cannot execute the solver", "no cp optimizer", "cplex studio",
 )
 
@@ -232,9 +225,6 @@ def run_loop(
     best_rank: tuple = ()
     best_code  = ""
     best_report: Dict = {}
-    # ★constraint revertguard constraint fix round
-    # fix round constraintcode
-    # "fixcode generateaandconstraint"problem
     base_complete_code = ""
     base_complete_n    = -1
 
@@ -248,7 +238,6 @@ def run_loop(
         if is_fix:
             print("  [Feedback] Calling API to fix the reported issues (must preserve all constraints).")
 
-        # fix round code = constraint otherwisecode
         fix_base = base_complete_code if (is_fix and base_complete_code) else code
 
         code = gen_code(
@@ -270,10 +259,6 @@ def run_loop(
         if dyn and dyn.get("kind") == "runtime_error":
             runtime_error = dyn.get("error", "")
 
-        # ── constraintrevertdetect ─────────────────────────────────────────────────────
-        # fix roundconstraint(code add ) < 70%
-        # "/solvingconstraint" revert result
-        # best and
         n_add        = _n_add(report)
         ran_no_crash = report.get("dynamic_ok") is not False
         regressed = bool(is_fix and base_complete_n > 0
@@ -282,7 +267,7 @@ def run_loop(
             print(f"  [regression-guard] constraints dropped {base_complete_n} -> {n_add} add() "
                   f"-> flagged regression: round rejected, re-fix on the complete version.")
 
-        # constraint revert
+        # Preserve the latest complete, non-regressed code.
         if ran_no_crash and not regressed and n_add >= base_complete_n:
             base_complete_code, base_complete_n = code, n_add
 
@@ -323,7 +308,6 @@ def run_loop(
                 print(f"  [coverage-gate] code missing hard global constraint(s) {missing_global} "
                       f"-> triggering one fix round")
 
-        # revertguardfeedback constraint must onlyx
         regression_note = ""
         if regressed:
             regression_note = (
@@ -341,18 +325,16 @@ def run_loop(
             dyn_pass = False
         if cons_gate:
             dyn_pass = False
-        # ★reverti.e."static+dynamic " "constraintsolving"
-        # and
         fully_valid  = static_valid and dyn_pass and not regressed
 
-        # Track best result across rounds revert best
+        # Keep the highest-ranked candidate across feedback rounds.
         rank = _candidate_rank(report)
         if not regressed and (not best_code or rank > best_rank):
             best_rank   = rank
             best_code   = code
             best_report = report
         elif not best_code:
-            best_code, best_report = code, report  # aresult
+            best_code, best_report = code, report
 
         history.append({
             "round":        rnd,
@@ -382,8 +364,6 @@ def run_loop(
         if rnd < MAX_FEEDBACK_ROUNDS:
             extra = "\n\n".join(p for p in (regression_note, runtime_error,
                                             cons_gate, no_solution_hint) if p)
-            # feedbackdisplay fixcode non-maycode
-            # ensure
             fb_code = base_complete_code or code
             feedback = _feedback_msg(report, fb_code, possible_constraints, extra)
             why = ("constraint regression" if regressed
