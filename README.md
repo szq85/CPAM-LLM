@@ -176,7 +176,7 @@ Settings are centralized in `config.py`. The most relevant:
 | ------------------------------------ | ------------------------------------- | ----------------------------------------------------- |
 | `CPAM_API_KEY` (env)               | API key for the general-purpose model | —                                                    |
 | `CPAM_API_BASE_URL` / `API_BASE_URL` | OpenAI-compatible endpoint          | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| `CPAM_API_MODEL` / `API_MODEL`     | API model name                        | `qwen-XXX` (set explicitly for your endpoint)      |
+| `CPAM_API_MODEL` / `API_MODEL`     | API model name                        | `qwen-XXX` (e.g. `qwen-plus`; set for your endpoint) |
 | `FT_URL_STAGE2`, `FT_URL_STAGE3` | fine-tuned model endpoints            | `http://localhost:6006/v1`, `:6008/v1`            |
 | `STAGE_ROUTING`                    | per-stage choice of fine-tuned vs API | math/code →`ft`; others → `api`                 |
 | `KB_UPDATE_POLICY`                 | knowledge-base admission gate         | `strict`                                            |
