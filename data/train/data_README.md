@@ -25,5 +25,5 @@ domains are DNA sequence design, battery-pack design, vehicle routing,
 charging-station location, and aircraft-skin processing.
 
 The current smoke-test set is separate at
-[`../test/test_dataset.json`](../test/test_dataset.json) and contains 10
+[`../test/test_data.json`](../test/test_data.json) and contains 10
 records (base plus first variant for each domain).
